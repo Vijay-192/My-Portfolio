@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 function NotFound() {
-  const [count, setCount] = useState(10);
+  const [count, setCount] = useState(10); // add countdown state
 
   useEffect(() => {
     // countdown timer
