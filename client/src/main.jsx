@@ -64,22 +64,20 @@ const router = createBrowserRouter([
       { path: "book-discovery-call", element: <BookingPage /> },
     ],
   },
-
   {
-    path: "login",
+    path: "/login",
     element: <Login />,
   },
   {
-    path: "register",
+    path: "/register",
     element: <Register />,
   },
   {
-    path: "forgot-password",
+    path: "/forgot-password",
     element: <ForgotPassword />,
   },
-
   {
-    path: "dashboard",
+    path: "/dashboard",
     element: (
       <ProtectedRoute>
         <AdminDashboard />
@@ -95,7 +93,6 @@ const router = createBrowserRouter([
       { path: "education", element: <EducationPage /> },
       { path: "skills", element: <SkillsPage /> },
       { path: "achievements", element: <AchievementPage /> },
-
       {
         path: "users",
         element: (
@@ -108,7 +105,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/" replace />,
   },
 ]);
 
