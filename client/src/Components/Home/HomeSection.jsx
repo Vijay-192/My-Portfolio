@@ -297,12 +297,24 @@ function HomeSection() {
         </div>
 
         {/* OTHER SECTIONS */}
-        <AboutSection />
-        <SkillSection />
-        <Education />
-        <ServiceSection />
-        <ProjectSection />
-        <BlogSection />
+        <AboutSection id="about" />
+        <section id="skills">
+          <SkillSection />
+        </section>
+
+        <section id="education">
+          <Education />
+        </section>
+
+        <section id="services">
+          <ServiceSection />
+        </section>
+        <section id="work">
+          <ProjectSection />
+        </section>
+        <section id="blogs">
+          <BlogSection />
+        </section>
       </section>
     </>
   );

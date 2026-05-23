@@ -143,18 +143,7 @@ const ProjectSection = () => {
     return `${BASE_URL}${rawUrl.startsWith("/") ? rawUrl : `/${rawUrl}`}`;
   };
   if (loading) return <ProjectSkeleton />;
-  if (error) {
-    return (
-      <section
-        id="work"
-        className="bg-black text-white min-h-screen flex items-center justify-center"
-      >
-        <p className="font-JetBrainsMono text-red-400 tracking-widest">
-          Failed to load projects. Please try again.
-        </p>
-      </section>
-    );
-  }
+
 
   return (
     <section id="work" className="bg-black text-white">
