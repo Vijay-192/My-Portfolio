@@ -1,4 +1,4 @@
-import Booking from "../Models/Book.model.js";
+import Booking from "../Models/Booking.model.js";
 import { sendBookingEmails } from "../utils/BookingEmail.js";
 
 const getBookedDates = async (req, res) => {
@@ -15,7 +15,6 @@ const getBookedTimes = async (req, res) => {
     const { date } = req.query;
     if (!date)
         return res.status(400).json({ message: "date query param is required" });
-
     try {
         const bookings = await Booking.find({ date }, "time").lean();
         const times = bookings.map((b) => b.time);
@@ -26,40 +25,31 @@ const getBookedTimes = async (req, res) => {
 };
 
 const createBooking = async (req, res) => {
-    const {
-        date, time,
-        firstName, lastName, email, phone,
-        socialLink, message,
-    } = req.body;
-
-    if (!date || !time || !firstName || !lastName || !email || !phone) {
+    const { date, time, firstName, lastName, email, phone, socialLink, message } = req.body;
+    if (!date || !time || !firstName || !lastName || !email || !phone)
         return res.status(400).json({ message: "All required fields must be filled." });
-    }
+
     const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRx.test(email)) {
+    if (!emailRx.test(email))
         return res.status(400).json({ message: "Invalid email address." });
-    }
+
     const bookingDate = new Date(date);
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
-    if (bookingDate < todayMidnight) {
+    if (bookingDate < todayMidnight)
         return res.status(400).json({ message: "Cannot book a past date." });
-    }
 
     try {
         const existing = await Booking.findOne({ date, time });
-        if (existing) {
-            return res.status(409).json({
-                message: "This slot is already booked. Please choose another time.",
-            });
-        }
+        if (existing)
+            return res.status(409).json({ message: "This slot is already booked. Please choose another time." });
 
         const booking = await Booking.create({
-            date, time,
-            firstName, lastName, email, phone,
+            date, time, firstName, lastName, email, phone,
             socialLink: socialLink || "",
             message: message || "",
         });
+
         sendBookingEmails(booking).catch((err) =>
             console.error("Email send error:", err.message)
         );
@@ -75,11 +65,8 @@ const createBooking = async (req, res) => {
             },
         });
     } catch (err) {
-        if (err.code === 11000) {
-            return res
-                .status(409)
-                .json({ message: "Slot just got booked. Please pick another time." });
-        }
+        if (err.code === 11000)
+            return res.status(409).json({ message: "Slot just got booked. Please pick another time." });
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
@@ -92,5 +79,26 @@ const getAllBookings = async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
+const deleteBooking = async (req, res) => {
+    try {
+        const deleted = await Booking.findByIdAndDelete(req.params.id);
+        if (!deleted)
+            return res.status(404).json({ message: "Booking not found." });
+        res.json({ message: "Booking deleted.", id: req.params.id });
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
+const deleteManyBookings = async (req, res) => {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0)
+        return res.status(400).json({ message: "ids array is required." });
+    try {
+        const result = await Booking.deleteMany({ _id: { $in: ids } });
+        res.json({ message: `${result.deletedCount} booking(s) deleted.`, deletedCount: result.deletedCount });
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
 
-export { getBookedDates, getBookedTimes, createBooking, getAllBookings };
+export { getBookedDates, getBookedTimes, createBooking, getAllBookings, deleteBooking, deleteManyBookings };

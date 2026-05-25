@@ -1,11 +1,5 @@
-// redux-store/ServiceSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../Utils/apiClient";
-
-// ─────────────────────────────────────────────────────────
-// FETCH ALL SERVICES
-// ─────────────────────────────────────────────────────────
 export const fetchServices = createAsyncThunk(
   "services/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -24,9 +18,6 @@ export const fetchServices = createAsyncThunk(
     }
   }
 );
-// ─────────────────────────────────────────────────────────
-// FETCH SINGLE SERVICE
-// ─────────────────────────────────────────────────────────
 export const fetchSingleService = createAsyncThunk(
   "services/fetchOne",
   async (id, { rejectWithValue }) => {
@@ -40,10 +31,6 @@ export const fetchSingleService = createAsyncThunk(
     }
   }
 );
-
-// ─────────────────────────────────────────────────────────
-// CREATE SERVICE
-// ─────────────────────────────────────────────────────────
 export const createService = createAsyncThunk(
   "services/create",
   async (formData, { rejectWithValue }) => {
@@ -66,10 +53,6 @@ export const createService = createAsyncThunk(
     }
   }
 );
-
-// ─────────────────────────────────────────────────────────
-// UPDATE SERVICE
-// ─────────────────────────────────────────────────────────
 export const updateService = createAsyncThunk(
   "services/update",
   async ({ id, formData }, { rejectWithValue }) => {
@@ -92,10 +75,6 @@ export const updateService = createAsyncThunk(
     }
   }
 );
-
-// ─────────────────────────────────────────────────────────
-// DELETE SERVICE
-// ─────────────────────────────────────────────────────────
 export const deleteService = createAsyncThunk(
   "services/delete",
   async (id, { rejectWithValue }) => {
@@ -109,10 +88,6 @@ export const deleteService = createAsyncThunk(
     }
   }
 );
-
-// ─────────────────────────────────────────────────────────
-// INITIAL STATE
-// ─────────────────────────────────────────────────────────
 const initialState = {
   services: [],
   selectedService: null,
@@ -125,10 +100,6 @@ const initialState = {
 
   successMessage: null,
 };
-
-// ─────────────────────────────────────────────────────────
-// SLICE
-// ─────────────────────────────────────────────────────────
 const serviceSlice = createSlice({
   name: "services",
 
@@ -149,7 +120,7 @@ const serviceSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // ───────────────── FETCH ALL ─────────────────
+      
       .addCase(fetchServices.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -165,7 +136,7 @@ const serviceSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ───────────────── FETCH SINGLE ─────────────────
+    
       .addCase(fetchSingleService.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -181,7 +152,7 @@ const serviceSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ───────────────── CREATE ─────────────────
+
       .addCase(createService.pending, (state) => {
         state.actionLoading = true;
         state.actionError = null;
@@ -207,7 +178,7 @@ const serviceSlice = createSlice({
         state.actionError = action.payload;
       })
 
-      // ───────────────── UPDATE ─────────────────
+      
       .addCase(updateService.pending, (state) => {
         state.actionLoading = true;
         state.actionError = null;
@@ -235,7 +206,6 @@ const serviceSlice = createSlice({
         state.actionError = action.payload;
       })
 
-      // ───────────────── DELETE ─────────────────
       .addCase(deleteService.pending, (state) => {
         state.actionLoading = true;
         state.actionError = null;
@@ -259,15 +229,11 @@ const serviceSlice = createSlice({
   },
 });
 
-// ─────────────────────────────────────────────────────────
-// EXPORTS
-// ─────────────────────────────────────────────────────────
 export const {
   clearMessages,
   clearSelectedService,
 } = serviceSlice.actions;
 
-// ───────────────── SELECTORS ─────────────────
 export const selectServices = (state) =>
   state.services?.services ?? [];
 

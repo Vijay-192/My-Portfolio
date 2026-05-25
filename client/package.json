@@ -32,6 +32,7 @@
     "react-quill-new": "^3.8.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
+    "recharts": "^3.8.1",
     "redux-persist": "^6.0.0",
     "router-dom": "^3.0.3",
     "tailwindcss": "^4.1.17"

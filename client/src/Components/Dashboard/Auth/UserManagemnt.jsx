@@ -1,6 +1,3 @@
-// Components/Dashboard/Auth/UserManagement.jsx
-// Admin-only page — uses existing authSlice thunks (fetchUsersThunk, assignRoleThunk)
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersThunk, assignRoleThunk } from "../../../redux-store/authSlice";

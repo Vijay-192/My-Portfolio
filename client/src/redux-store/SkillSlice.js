@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../Utils/apiClient";
 
-// ─── CREATE ───
 export const createSkill = createAsyncThunk(
   "skills/createSkill",
   async (formData, { rejectWithValue }) => {
@@ -14,7 +13,7 @@ export const createSkill = createAsyncThunk(
   }
 );
 
-// ─── FETCH ───
+
 export const fetchSkills = createAsyncThunk(
   "skills/fetchSkills",
   async (_, { rejectWithValue }) => {
@@ -27,7 +26,7 @@ export const fetchSkills = createAsyncThunk(
   }
 );
 
-// ─── DELETE ───
+
 export const deleteSkill = createAsyncThunk(
   "skills/deleteSkill",
   async (id, { rejectWithValue }) => {
@@ -40,7 +39,7 @@ export const deleteSkill = createAsyncThunk(
   }
 );
 
-// ─── STATE ───
+
 const initialState = {
   skills: [],
   loading: false,
@@ -63,7 +62,7 @@ const skillSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // CREATE
+
       .addCase(createSkill.pending, (state) => {
         state.actionLoading = true;
       })
@@ -77,7 +76,7 @@ const skillSlice = createSlice({
         state.actionError = action.payload;
       })
 
-      // FETCH
+
       .addCase(fetchSkills.pending, (state) => {
         state.loading = true;
       })
@@ -90,7 +89,7 @@ const skillSlice = createSlice({
         state.error = action.payload;
       })
 
-      // DELETE
+
       .addCase(deleteSkill.pending, (state) => {
         state.actionLoading = true;
       })

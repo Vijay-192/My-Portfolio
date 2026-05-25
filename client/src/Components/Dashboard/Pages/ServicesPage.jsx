@@ -18,15 +18,10 @@ import {
   Plus, Search, Eye, Trash2, Pencil, X,
   Upload, Loader2, FolderKanban,
 } from "lucide-react";
-
 const initialForm = { title: "", description: "" };
-
 const inputCls =
   "edu-input w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm transition";
-
 const TABLE_HEADERS = ["Service", "Description", "Images", "Date", "Actions"];
-
-
 const ServicesPage = () => {
   const dispatch = useDispatch();
 
@@ -49,7 +44,6 @@ const ServicesPage = () => {
   const [preview1, setPreview1] = useState(null);
   const [preview2, setPreview2] = useState(null);
 
-  /* ── Effects ── */
   useEffect(() => { dispatch(fetchServices()); }, [dispatch]);
 
   useEffect(() => {
@@ -63,7 +57,6 @@ const ServicesPage = () => {
     }
   }, [successMsg, dispatch]);
 
-  /* ── Helpers ── */
   const resetModal = () => {
     setShowModal(false);
     setEditItem(null);
@@ -118,12 +111,8 @@ const ServicesPage = () => {
   const filtered = services.filter((s) =>
     s.title?.toLowerCase().includes(search.toLowerCase())
   );
-
-  /* ── RENDER ── */
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-
-      {/* PAGE HEADER */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold" style={{ color: "var(--edu-primary)" }}>
@@ -137,8 +126,6 @@ const ServicesPage = () => {
           <Plus className="w-4 h-4" /> Add Service
         </button>
       </div>
-
-      {/* SEARCH */}
       <div className="mb-6">
         <div className="relative max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -150,8 +137,6 @@ const ServicesPage = () => {
           />
         </div>
       </div>
-
-      {/* TABLE */}
       {loading ? (
         <div className="flex items-center justify-center py-20 gap-3 text-gray-400">
           <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--edu-primary)" }} />

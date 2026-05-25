@@ -11,9 +11,13 @@ import {
   ChevronLeft,
   LogOut,
   Info,
+  CalendarCheck,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../redux-store/hooks";
-import { toggleSidebar, setSidebarOpen } from "../../../redux-store/ColorUiSlice";
+import {
+  toggleSidebar,
+  setSidebarOpen,
+} from "../../../redux-store/ColorUiSlice";
 import { logoutThunk } from "../../../redux-store/authSlice";
 
 const menu = [
@@ -21,10 +25,23 @@ const menu = [
   { name: "Projects Manage", path: "/dashboard/projects", icon: FolderKanban },
   { name: "Services Manage", path: "/dashboard/services", icon: Layers },
   { name: "Skills Manage", path: "/dashboard/skills", icon: Zap },
-  { name: "Education Manage", path: "/dashboard/education", icon: GraduationCap },
-  { name: "Achievements Manage", path: "/dashboard/achievements", icon: Trophy },
+  {
+    name: "Education Manage",
+    path: "/dashboard/education",
+    icon: GraduationCap,
+  },
+  {
+    name: "Achievements Manage",
+    path: "/dashboard/achievements",
+    icon: Trophy,
+  },
   { name: "Blogs Manage", path: "/dashboard/blogs", icon: BookOpen },
   { name: "About Manage", path: "/dashboard/about", icon: Info },
+  {
+    name: "Book Call Notifications",
+    path: "/dashboard/book-call-notifications",
+    icon: CalendarCheck,
+  },
 ];
 
 const Sidebar = () => {
@@ -74,7 +91,10 @@ const Sidebar = () => {
             onClick={() => dispatch(toggleSidebar())}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition ml-auto"
           >
-            <X size={18} className="md:hidden text-gray-500 dark:text-gray-400" />
+            <X
+              size={18}
+              className="md:hidden text-gray-500 dark:text-gray-400"
+            />
             <ChevronLeft
               size={18}
               className={`
@@ -95,9 +115,10 @@ const Sidebar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 py-2.5 rounded-xl transition-all duration-200 font-medium text-sm
                   ${sidebarOpen ? "px-3" : "justify-center px-0"}
-                  ${isActive
-                    ? "text-white shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                  ${
+                    isActive
+                      ? "text-white shadow-sm"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                   }`
                 }
                 style={({ isActive }) =>
@@ -129,7 +150,10 @@ const Sidebar = () => {
           ))}
         </nav>
 
-        <div className="mx-4 mb-2 h-px" style={{ background: "var(--edu-light)" }} />
+        <div
+          className="mx-4 mb-2 h-px"
+          style={{ background: "var(--edu-light)" }}
+        />
 
         <div className="p-3 pb-2 flex-shrink-0">
           {sidebarOpen ? (
@@ -147,7 +171,10 @@ const Sidebar = () => {
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                   {user?.firstName || "Admin"} {user?.lastName || "User"}
                 </p>
-                <p className="text-xs truncate" style={{ color: "var(--edu-accent)" }}>
+                <p
+                  className="text-xs truncate"
+                  style={{ color: "var(--edu-accent)" }}
+                >
                   {user?.email || "admin@example.com"}
                 </p>
               </div>

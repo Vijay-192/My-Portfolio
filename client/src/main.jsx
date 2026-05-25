@@ -44,6 +44,9 @@ import AboutPage from "./Components/Dashboard/Pages/AboutPage.jsx";
 import BookACall from "./Components/Project/BookACall.jsx";
 import BookingPage from "./Components/Project/BookingPage.jsx";
 import AllBlog from "./Components/Dashboard/Pages/DashboardBlog/AllBlog.jsx";
+import BookCallNotify from "./Components/Dashboard/Pages/BookCallNotify.jsx";
+import Terms from "./Components/other/Terms.jsx";
+import PrivacyPolicy from "./Components/other/PrivacyPolicy.jsx";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +65,8 @@ const router = createBrowserRouter([
       { path: "gallery", element: <GallerySection /> },
       { path: "book-a-call", element: <BookACall /> },
       { path: "book-discovery-call", element: <BookingPage /> },
+      { path: "privacy-policy", element: <PrivacyPolicy /> },
+      { path: "terms-of-use", element: <Terms /> },
     ],
   },
   {
@@ -93,6 +98,7 @@ const router = createBrowserRouter([
       { path: "education", element: <EducationPage /> },
       { path: "skills", element: <SkillsPage /> },
       { path: "achievements", element: <AchievementPage /> },
+      { path: "book-call-notifications", element: <BookCallNotify /> },
       {
         path: "users",
         element: (

@@ -94,8 +94,6 @@ const SkillsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-
-      {/* PAGE HEADER */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold" style={{ color: "var(--edu-primary)" }}>Skills</h1>
@@ -110,8 +108,6 @@ const SkillsPage = () => {
           <Plus className="w-4 h-4" /> Add Skill
         </button>
       </div>
-
-      {/* SEARCH */}
       <div className="mb-6">
         <div className="relative max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -122,8 +118,6 @@ const SkillsPage = () => {
           />
         </div>
       </div>
-
-      {/* TABLE */}
       {loading ? (
         <div className="flex items-center justify-center py-20 gap-3 text-gray-400">
           <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--edu-primary)" }} />
@@ -156,13 +150,9 @@ const SkillsPage = () => {
                     </tr>
                   ) : filtered.map((item) => (
                     <tr key={item._id} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition">
-
-                      {/* Title */}
                       <td className="p-4 font-medium text-gray-900 dark:text-gray-100 capitalize">
                         {item.title}
                       </td>
-
-                      {/* ✅ Color swatch */}
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <div
@@ -185,13 +175,9 @@ const SkillsPage = () => {
                           <span className="text-gray-300 dark:text-gray-600 text-xs">—</span>
                         )}
                       </td>
-
-                      {/* Percentage */}
                       <td className="p-4">
                         <span className="edu-badge">{item.percentage}%</span>
                       </td>
-
-                      {/* Progress bar — ✅ item.color se colored */}
                       <td className="p-4 min-w-[160px]">
                         <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
                           <div
@@ -230,8 +216,6 @@ const SkillsPage = () => {
           </div>
         </section>
       )}
-
-      {/* ── ADD MODAL ─────────────────────────────────── */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="edu-modal-wrap bg-white dark:bg-gray-800 rounded-2xl w-full max-w-lg shadow-2xl max-h-[92vh] overflow-y-auto">
@@ -268,8 +252,6 @@ const SkillsPage = () => {
                     value={form.percentage} onChange={handleChange}
                     placeholder="e.g., 85" className={inputCls} />
                 </div>
-
-                {/* ✅ COLOR PICKER */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Skill Color <span className="font-normal text-gray-400">(circle color on hover)</span>
@@ -292,10 +274,8 @@ const SkillsPage = () => {
                     ))}
                   </div>
 
-                  {/* Custom color input */}
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      {/* ✅ Native color picker */}
                       <input
                         type="color"
                         value={form.color}
@@ -319,7 +299,7 @@ const SkillsPage = () => {
                   </div>
                 </div>
 
-                {/* Icon (optional) */}
+            
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Icon text <span className="font-normal text-gray-400">(optional emoji/label)</span>
@@ -328,7 +308,7 @@ const SkillsPage = () => {
                     placeholder="e.g., ⚛️" className={inputCls} />
                 </div>
 
-                {/* Image upload */}
+        
                 <div>
                   <p className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Skill Image <span className="text-gray-400 font-normal">(SVG / PNG recommended)</span>
@@ -372,7 +352,7 @@ const SkillsPage = () => {
         </div>
       )}
 
-      {/* ── DELETE CONFIRM ─────────────────────────────── */}
+    
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-2xl p-6">

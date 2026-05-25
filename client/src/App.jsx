@@ -52,6 +52,8 @@ function App() {
     "/admin/register",
     "/book-discovery-call",
     "/view-blog",
+     "/privacy-policy",   
+    "/terms-of-use",
   ];
 
   const hideStaticLayout = hideLayoutRoutes.includes(location.pathname);

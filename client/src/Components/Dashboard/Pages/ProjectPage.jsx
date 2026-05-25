@@ -12,14 +12,10 @@ import {
   ChevronLeft, ChevronRight, Globe, Calendar, Briefcase,
   Lightbulb, Target, Star, User, Package,
 } from "lucide-react";
-
-// ── Constants ─────────────────────────────────────────────
 const CATEGORIES = ["Web", "Mobile", "Desktop", "AI/ML", "Backend", "Other"];
 const INDUSTRIES = ["Web", "App", "Desktop", "AI/ML", "E-Commerce", "Healthcare", "Finance", "Education", "Other"];
-
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 10 }, (_, i) => CURRENT_YEAR - i); // last 10 years
-
 const initialForm = {
   title:                 "",
   description:           "",
@@ -27,7 +23,6 @@ const initialForm = {
   liveLink:              "",
   githubLink:            "",
   category:              "",
-  // New fields
   industry:              "",
   publishYear:           "",
   problemStatement:      "",
@@ -40,23 +35,17 @@ const initialForm = {
 
 const inputCls =
   "edu-input w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm transition";
-
 const TABLE_HEADERS = ["Project", "Industry", "Tech Stack", "Links", "Date", "Actions"];
-
-// ── Helpers ───────────────────────────────────────────────
 const parseTechStack = (value) => {
   if (!value) return "";
   if (Array.isArray(value)) return value.join(", ");
   try { const p = JSON.parse(value); if (Array.isArray(p)) return p.join(", "); } catch (_) {}
   return value;
 };
-
 const toTagArray = (raw) =>
   Array.isArray(raw)
     ? raw
     : parseTechStack(raw).split(",").map((t) => t.trim()).filter(Boolean);
-
-// ── Image Carousel ────────────────────────────────────────
 const ImageCarousel = ({ images = [] }) => {
   const [idx, setIdx] = useState(0);
   if (!images.length) return null;
@@ -95,8 +84,6 @@ const ImageCarousel = ({ images = [] }) => {
     </div>
   );
 };
-
-// ── Section Divider ───────────────────────────────────────
 const SectionLabel = ({ icon: Icon, label }) => (
   <div className="flex items-center gap-2 mt-2 mb-1">
     <Icon className="w-4 h-4 text-gray-400" />
@@ -104,7 +91,6 @@ const SectionLabel = ({ icon: Icon, label }) => (
   </div>
 );
 
-// ── Main Component ────────────────────────────────────────
 const ProjectsPage = () => {
   const dispatch = useDispatch();
 
@@ -123,9 +109,7 @@ const ProjectsPage = () => {
   const [catFilter,     setCatFilter]     = useState("All");
   const [form,          setForm]          = useState(initialForm);
   const [submitting,    setSubmitting]    = useState(false);
-  const [activeTab,     setActiveTab]     = useState("basic"); // basic | details | media | testimonial
-
-  // Media states
+  const [activeTab,     setActiveTab]     = useState("basic"); 
   const [imageFiles,     setImageFiles]     = useState([]);
   const [imagePreviews,  setImagePreviews]  = useState([]);
   const [videoFile,      setVideoFile]      = useState(null);
@@ -144,7 +128,6 @@ const ProjectsPage = () => {
     if (successMsg) { dispatch(clearMessages()); resetModal(); }
   }, [successMsg, dispatch]);
 
-  // Populate form on edit
   useEffect(() => {
     if (editItem) {
       setForm({
@@ -240,8 +223,6 @@ const ProjectsPage = () => {
     p.title?.toLowerCase().includes(search.toLowerCase()) &&
     (catFilter === "All" || p.category === catFilter)
   );
-
-  // ── Modal tabs ────────────────────────────────────────────
   const TABS = [
     { id: "basic",       label: "Basic Info" },
     { id: "details",     label: "Details" },
@@ -424,8 +405,6 @@ const ProjectsPage = () => {
           </div>
         </section>
       )}
-
-      {/* ── ADD / EDIT MODAL ─────────────────────────────── */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="edu-modal-wrap bg-white dark:bg-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[92vh] overflow-y-auto">
@@ -463,8 +442,6 @@ const ProjectsPage = () => {
 
             <div className="edu-modal-body">
               <div className="space-y-4">
-
-                {/* ── TAB: Basic Info ─────────────────────── */}
                 {activeTab === "basic" && (
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -532,8 +509,6 @@ const ProjectsPage = () => {
                     </div>
                   </>
                 )}
-
-                {/* ── TAB: Details ─────────────────────────── */}
                 {activeTab === "details" && (
                   <>
                     <div>
@@ -566,8 +541,6 @@ const ProjectsPage = () => {
                     </div>
                   </>
                 )}
-
-                {/* ── TAB: Media ──────────────────────────── */}
                 {activeTab === "media" && (
                   <>
                     {/* Project Icon */}
@@ -663,8 +636,6 @@ const ProjectsPage = () => {
                     </div>
                   </>
                 )}
-
-                {/* ── TAB: Testimonial ─────────────────────── */}
                 {activeTab === "testimonial" && (
                   <>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -781,8 +752,6 @@ const ProjectsPage = () => {
           </div>
         </div>
       )}
-
-      {/* ── VIEW MODAL ───────────────────────────────────── */}
       {viewItem && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="edu-modal-wrap bg-white dark:bg-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -957,8 +926,6 @@ const ProjectsPage = () => {
           </div>
         </div>
       )}
-
-      {/* ── DELETE CONFIRM ───────────────────────────────── */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-2xl p-6">

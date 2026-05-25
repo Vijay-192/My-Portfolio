@@ -1,15 +1,6 @@
-// src/store/slices/bookingSlice.js
-// ─────────────────────────────────────────────────────────────────────────────
-// Booking slice — same pattern as projectSlice
-// Uses axiosInstance from ../Utils/apiClient
-// ─────────────────────────────────────────────────────────────────────────────
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../Utils/apiClient";
 
-// ── Async Thunks ──────────────────────────────────────────────────────────────
-
-/** Fetch all dates that have at least one booking (for calendar) */
 export const fetchBookedDates = createAsyncThunk(
   "booking/fetchBookedDates",
   async (_, { rejectWithValue }) => {
@@ -22,7 +13,6 @@ export const fetchBookedDates = createAsyncThunk(
   }
 );
 
-/** Fetch booked time slots for a specific date */
 export const fetchBookedTimes = createAsyncThunk(
   "booking/fetchBookedTimes",
   async (date, { rejectWithValue }) => {
@@ -35,7 +25,6 @@ export const fetchBookedTimes = createAsyncThunk(
   }
 );
 
-/** Create a new booking */
 export const createBooking = createAsyncThunk(
   "booking/create",
   async (bookingData, { rejectWithValue }) => {
@@ -47,34 +36,63 @@ export const createBooking = createAsyncThunk(
     }
   }
 );
-
-// ── Initial State ─────────────────────────────────────────────────────────────
+export const fetchAllBookings = createAsyncThunk(
+  "booking/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get("/bookings/all");
+      return data.bookings || [];
+    } catch (err) {
+      return rejectWithValue(err?.response?.data?.message || "Failed to fetch bookings");
+    }
+  }
+);
+export const deleteBooking = createAsyncThunk(
+  "booking/deleteOne",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/bookings/${id}`);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data?.message || "Delete failed");
+    }
+  }
+);
+export const deleteManyBookings = createAsyncThunk(
+  "booking/deleteMany",
+  async (ids, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete("/bookings/", { data: { ids } });
+      return ids;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data?.message || "Bulk delete failed");
+    }
+  }
+);
 
 const initialState = {
-  // Calendar
-  bookedDates:  [],
-  datesLoading: false,
-  datesError:   null,
-
-  // Time slots
-  bookedTimes:  [],
-  timesLoading: false,
-  timesError:   null,
-
-  // Booking submission
-  submitted:      false,
-  submitLoading:  false,
-  submitError:    null,
-  lastBooking:    null,   // { id, date, time, name, email }
+  bookedDates:   [],
+  datesLoading:  false,
+  datesError:    null,
+  bookedTimes:   [],
+  timesLoading:  false,
+  timesError:    null,
+  submitted:     false,
+  submitLoading: false,
+  submitError:   null,
+  lastBooking:   null,
+  // admin list
+  allBookings:   [],
+  listLoading:   false,
+  listError:     null,
+  deleteLoading: false,
+  deleteError:   null,
 };
-
-// ── Slice ─────────────────────────────────────────────────────────────────────
 
 const bookingSlice = createSlice({
   name: "booking",
   initialState,
   reducers: {
-    /** Call this when user navigates away / starts a new booking */
     resetBooking(state) {
       state.submitted     = false;
       state.submitLoading = false;
@@ -86,62 +104,41 @@ const bookingSlice = createSlice({
       state.submitError = null;
       state.datesError  = null;
       state.timesError  = null;
+      state.deleteError = null;
+      state.listError   = null;
     },
   },
   extraReducers: (builder) => {
-    // ── fetchBookedDates ──────────────────────────────────────────────────────
     builder
-      .addCase(fetchBookedDates.pending, (state) => {
-        state.datesLoading = true;
-        state.datesError   = null;
+      .addCase(fetchBookedDates.pending,  (s) => { s.datesLoading = true; s.datesError = null; })
+      .addCase(fetchBookedDates.fulfilled,(s, a) => { s.datesLoading = false; s.bookedDates = a.payload; })
+      .addCase(fetchBookedDates.rejected, (s, a) => { s.datesLoading = false; s.datesError = a.payload; })
+      .addCase(fetchBookedTimes.pending,  (s) => { s.timesLoading = true; s.timesError = null; s.bookedTimes = []; })
+      .addCase(fetchBookedTimes.fulfilled,(s, a) => { s.timesLoading = false; s.bookedTimes = a.payload; })
+      .addCase(fetchBookedTimes.rejected, (s, a) => { s.timesLoading = false; s.timesError = a.payload; })
+      .addCase(createBooking.pending,     (s) => { s.submitLoading = true; s.submitError = null; s.submitted = false; })
+      .addCase(createBooking.fulfilled,   (s, a) => { s.submitLoading = false; s.submitted = true; s.lastBooking = a.payload; })
+      .addCase(createBooking.rejected,    (s, a) => { s.submitLoading = false; s.submitError = a.payload; })
+      .addCase(fetchAllBookings.pending,  (s) => { s.listLoading = true; s.listError = null; })
+      .addCase(fetchAllBookings.fulfilled,(s, a) => { s.listLoading = false; s.allBookings = a.payload; })
+      .addCase(fetchAllBookings.rejected, (s, a) => { s.listLoading = false; s.listError = a.payload; })
+      .addCase(deleteBooking.pending,     (s) => { s.deleteLoading = true; s.deleteError = null; })
+      .addCase(deleteBooking.fulfilled,   (s, a) => {
+        s.deleteLoading = false;
+        s.allBookings   = s.allBookings.filter((b) => b._id !== a.payload);
       })
-      .addCase(fetchBookedDates.fulfilled, (state, action) => {
-        state.datesLoading = false;
-        state.bookedDates  = action.payload;
+      .addCase(deleteBooking.rejected,    (s, a) => { s.deleteLoading = false; s.deleteError = a.payload; })
+      .addCase(deleteManyBookings.pending,  (s) => { s.deleteLoading = true; s.deleteError = null; })
+      .addCase(deleteManyBookings.fulfilled,(s, a) => {
+        s.deleteLoading = false;
+        const removed   = new Set(a.payload);
+        s.allBookings   = s.allBookings.filter((b) => !removed.has(b._id));
       })
-      .addCase(fetchBookedDates.rejected, (state, action) => {
-        state.datesLoading = false;
-        state.datesError   = action.payload;
-      });
-
-    // ── fetchBookedTimes ──────────────────────────────────────────────────────
-    builder
-      .addCase(fetchBookedTimes.pending, (state) => {
-        state.timesLoading = true;
-        state.timesError   = null;
-        state.bookedTimes  = [];   // clear previous date's times
-      })
-      .addCase(fetchBookedTimes.fulfilled, (state, action) => {
-        state.timesLoading = false;
-        state.bookedTimes  = action.payload;
-      })
-      .addCase(fetchBookedTimes.rejected, (state, action) => {
-        state.timesLoading = false;
-        state.timesError   = action.payload;
-      });
-
-    // ── createBooking ─────────────────────────────────────────────────────────
-    builder
-      .addCase(createBooking.pending, (state) => {
-        state.submitLoading = true;
-        state.submitError   = null;
-        state.submitted     = false;
-      })
-      .addCase(createBooking.fulfilled, (state, action) => {
-        state.submitLoading = false;
-        state.submitted     = true;
-        state.lastBooking   = action.payload;
-      })
-      .addCase(createBooking.rejected, (state, action) => {
-        state.submitLoading = false;
-        state.submitError   = action.payload;
-      });
+      .addCase(deleteManyBookings.rejected, (s, a) => { s.deleteLoading = false; s.deleteError = a.payload; });
   },
 });
 
 export const { resetBooking, clearBookingError } = bookingSlice.actions;
-
-// ── Selectors ─────────────────────────────────────────────────────────────────
 
 export const selectBookedDates   = (s) => s.booking?.bookedDates   ?? [];
 export const selectDatesLoading  = (s) => s.booking?.datesLoading  ?? false;
@@ -151,5 +148,9 @@ export const selectSubmitted     = (s) => s.booking?.submitted     ?? false;
 export const selectSubmitLoading = (s) => s.booking?.submitLoading ?? false;
 export const selectSubmitError   = (s) => s.booking?.submitError   ?? null;
 export const selectLastBooking   = (s) => s.booking?.lastBooking   ?? null;
+export const selectAllBookings   = (s) => s.booking?.allBookings   ?? [];
+export const selectListLoading   = (s) => s.booking?.listLoading   ?? false;
+export const selectDeleteLoading = (s) => s.booking?.deleteLoading ?? false;
+export const selectDeleteError   = (s) => s.booking?.deleteError   ?? null;
 
 export default bookingSlice.reducer;

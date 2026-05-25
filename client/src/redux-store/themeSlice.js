@@ -1,4 +1,3 @@
-// redux-store/themeSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const getInitialDarkMode = () => {
@@ -15,12 +14,12 @@ const themeSlice = createSlice({
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
       localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
-      // DOM update ThemeProvider handle karega
+      
     },
     setDarkMode: (state, action) => {
       state.darkMode = action.payload;
       localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
-      // DOM update ThemeProvider handle karega
+    
     },
   },
 });

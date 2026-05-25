@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,10 +28,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-
-// ─── helpers ──────────────────────────────────────────────────────────
 const LS_KEY = "blogspage_added_ids";
-
 const parseTags = (t) => {
   if (!t) return [];
   if (Array.isArray(t)) return t.filter(Boolean);
@@ -47,10 +43,6 @@ const fmtDate = (d) =>
         year: "numeric",
       })
     : "—";
-
-// ══════════════════════════════════════════════════════════════════════
-//  ADD BLOG POPUP
-// ══════════════════════════════════════════════════════════════════════
 const AddBlogPopup = ({ allBlogs, addedIds, onAdd, onClose }) => {
   const [search, setSearch] = useState("");
 
@@ -210,10 +202,6 @@ const AddBlogPopup = ({ allBlogs, addedIds, onAdd, onClose }) => {
     </div>
   );
 };
-
-// ══════════════════════════════════════════════════════════════════════
-//  BLOG VIEW FULL SCREEN
-// ══════════════════════════════════════════════════════════════════════
 const BlogViewFullScreen = ({ blog, onClose }) => (
   
   <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 overflow-y-auto">
@@ -290,10 +278,6 @@ const BlogViewFullScreen = ({ blog, onClose }) => (
     </div>
   </div>
 );
-
-// ══════════════════════════════════════════════════════════════════════
-//  DELETE MODAL
-// ══════════════════════════════════════════════════════════════════════
 const DeleteModal = ({ target, onConfirm, onCancel }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
     <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-2xl p-6">
@@ -332,10 +316,6 @@ const DeleteModal = ({ target, onConfirm, onCancel }) => (
     </div>
   </div>
 );
-
-// ══════════════════════════════════════════════════════════════════════
-//  ROOT PAGE  — single return, no race condition, localStorage persist
-// ══════════════════════════════════════════════════════════════════════
 const BlogsPage = () => {
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
@@ -344,8 +324,6 @@ const BlogsPage = () => {
   const loading    = useSelector(selectBlogLoading);
   const actionError= useSelector(selectActionError);
   const successMsg = useSelector(selectSuccessMessage);
-
-  // persisted Set of added blog _ids
   const [addedIds, setAddedIds] = useState(() => {
     try {
       const saved = localStorage.getItem(LS_KEY);
@@ -359,16 +337,10 @@ const BlogsPage = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [search,       setSearch]       = useState("");
   const [showPopup,    setShowPopup]    = useState(false);
-
-  // fetch blogs on mount
   useEffect(() => { dispatch(fetchAllBlogs()); }, [dispatch]);
-
-  // sync addedIds → localStorage
   useEffect(() => {
     localStorage.setItem(LS_KEY, JSON.stringify([...addedIds]));
   }, [addedIds]);
-
-  // toasts
   useEffect(() => {
     if (successMsg) { toast.success(successMsg); dispatch(clearMessages()); }
   }, [successMsg, dispatch]);
@@ -376,8 +348,6 @@ const BlogsPage = () => {
   useEffect(() => {
     if (actionError) { toast.error(actionError); dispatch(clearMessages()); }
   }, [actionError, dispatch]);
-
-  // handlers
   const handleAdd = useCallback((blog) => {
     setAddedIds((prev) => {
       if (prev.has(blog._id)) return prev;
@@ -397,8 +367,6 @@ const BlogsPage = () => {
     toast.success(`"${deleteTarget.title}" removed from table`);
     setDeleteTarget(null);
   }, [deleteTarget]);
-
-  // derive table rows — always in sync with redux + addedIds
   const tableBlogs = allBlogs.filter((b) => addedIds.has(b._id));
 
   const filteredTable = tableBlogs.filter((b) =>
@@ -406,19 +374,12 @@ const BlogsPage = () => {
       (f || "").toLowerCase().includes(search.toLowerCase())
     )
   );
-
-  // ── single return ──────────────────────────────────────────────────
   return (
     <>
-      {/* ── FULL SCREEN BLOG VIEW (overlay) ── */}
       {viewItem && (
         <BlogViewFullScreen blog={viewItem} onClose={() => setViewItem(null)} />
       )}
-
-      {/* ── MAIN PAGE ── */}
       <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 p-6 ${viewItem ? "hidden" : ""}`}>
-
-        {/* ── PAGE HEADER: title left | buttons right ── */}
         <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold" style={{ color: "var(--edu-primary)" }}>
@@ -443,8 +404,6 @@ const BlogsPage = () => {
             </button>
           </div>
         </div>
-
-        {/* ── SEARCH BAR ── */}
         <div className="mb-5 max-w-md">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -456,8 +415,6 @@ const BlogsPage = () => {
             />
           </div>
         </div>
-
-        {/* ── TABLE HEADING: "All Blogs" left | record count right ── */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div
@@ -498,7 +455,6 @@ const BlogsPage = () => {
         ) : (
           <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
             <table className="w-full text-sm">
-              {/* dark green header — matching screenshot */}
               <thead>
                 <tr style={{ background: "var(--edu-primary)" }}>
                   {["Blog", "Author", "Tags", "Date", "Actions"].map((h) => (
@@ -646,8 +602,6 @@ const BlogsPage = () => {
           </div>
         )}
       </div>
-
-      {/* ── ADD BLOG POPUP ── */}
       {showPopup && (
         <AddBlogPopup
           allBlogs={allBlogs}
@@ -656,8 +610,6 @@ const BlogsPage = () => {
           onClose={() => setShowPopup(false)}
         />
       )}
-
-      {/* ── DELETE CONFIRM MODAL ── */}
       {deleteTarget && (
         <DeleteModal
           target={deleteTarget}
