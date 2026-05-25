@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProjects }     from "../../../redux-store/ProjectSlice";
+import { fetchProjects }     from "../../../redux-store/Projectslice";
 import { fetchSkills }       from "../../../redux-store/SkillSlice";
 import { fetchServices }     from "../../../redux-store/ServiceSlice";
 import { fetchAchievements } from "../../../redux-store/AchievementSlice";
-import { fetchAllBlogs }     from "../../../redux-store/BlogSlice";
+import { fetchAllBlogs }     from "../../../redux-store/BlogSlice"; //chage path to fetchAllBlogs
+
+
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell,
