@@ -514,3 +514,75 @@
   border-color: #374151;
 }
 
+
+   /* DASHBOARD GLOBAL layout dektop and mobile  */
+@keyframes bellRing {
+  0%,  100% { transform: rotate(0deg); }
+  15%       { transform: rotate(16deg); }
+  30%       { transform: rotate(-14deg); }
+  45%       { transform: rotate(10deg); }
+  60%       { transform: rotate(-6deg); }
+  75%       { transform: rotate(3deg); }
+}
+
+@keyframes bellGlow {
+  0%,  100% { box-shadow: 0 0 0 0   rgba(12, 71, 51, 0.3); }
+  50%       { box-shadow: 0 0 0 5px rgba(12, 71, 51, 0);   }
+}
+
+.bell-ring { animation: bellRing 0.7s ease forwards; }
+.bell-glow { animation: bellGlow 2.2s ease infinite;  }
+
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(100%); opacity: 0; }
+}
+
+.mobile-menu-enter { animation: slideUp   0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+.mobile-menu-leave { animation: slideDown 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+
+
+.sidebar-active {
+  color: #ffffff;
+  background: var(--edu-primary);
+  box-shadow: 0 2px 8px rgba(12, 71, 51, 0.25);
+}
+.sidebar-inactive {
+  color: #6b7280;
+}
+.dark .sidebar-inactive { color: #9ca3af; }
+
+.sidebar-inactive:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.dark .sidebar-inactive:hover {
+  background: #1f2937;
+  color: #ffffff;
+}
+@keyframes badgePop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.2);             }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.badge-pop { animation: badgePop 0.3s ease forwards; }
+.bottom-nav-active-dot::after {
+  content: '';
+  display: block;
+  width:  4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--edu-primary);
+  margin: 2px auto 0;
+}
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

@@ -20,36 +20,23 @@ import {
 } from "../../../redux-store/ColorUiSlice";
 import { logoutThunk } from "../../../redux-store/authSlice";
 
-const menu = [
-  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard, end: true },
-  { name: "Projects Manage", path: "/dashboard/projects", icon: FolderKanban },
-  { name: "Services Manage", path: "/dashboard/services", icon: Layers },
-  { name: "Skills Manage", path: "/dashboard/skills", icon: Zap },
-  {
-    name: "Education Manage",
-    path: "/dashboard/education",
-    icon: GraduationCap,
-  },
-  {
-    name: "Achievements Manage",
-    path: "/dashboard/achievements",
-    icon: Trophy,
-  },
-  { name: "Blogs Manage", path: "/dashboard/blogs", icon: BookOpen },
-  { name: "About Manage", path: "/dashboard/about", icon: Info },
-  {
-    name: "Book Call Notifications",
-    path: "/dashboard/book-call-notifications",
-    icon: CalendarCheck,
-  },
+const MENU = [
+  { name: "Dashboard",               path: "/dashboard",                         icon: LayoutDashboard, end: true },
+  { name: "Projects Manage",         path: "/dashboard/projects",                icon: FolderKanban               },
+  { name: "Services Manage",         path: "/dashboard/services",                icon: Layers                     },
+  { name: "Skills Manage",           path: "/dashboard/skills",                  icon: Zap                        },
+  { name: "Education Manage",        path: "/dashboard/education",               icon: GraduationCap              },
+  { name: "Achievements Manage",     path: "/dashboard/achievements",            icon: Trophy                     },
+  { name: "Blogs Manage",            path: "/dashboard/blogs",                   icon: BookOpen                   },
+  { name: "About Manage",            path: "/dashboard/about",                   icon: Info                       },
+  { name: "Book Call Notifications", path: "/dashboard/book-call-notifications", icon: CalendarCheck              },
 ];
-
 const Sidebar = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const dispatch    = useAppDispatch();
+  const navigate    = useNavigate();
   const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
-  const user = useAppSelector((state) => state.auth.user);
-  const loading = useAppSelector((state) => state.auth.loading);
+  const user        = useAppSelector((state) => state.auth.user);
+  const loading     = useAppSelector((state) => state.auth.loading);
 
   const handleLogout = async () => {
     await dispatch(logoutThunk());
@@ -58,22 +45,24 @@ const Sidebar = () => {
 
   return (
     <>
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm"
           onClick={() => dispatch(setSidebarOpen(false))}
         />
       )}
-
       <aside
         className={`
-          fixed top-0 left-0 z-50 h-screen flex flex-col
+          fixed top-0 left-0 z-50 h-screen flex-col
           bg-white dark:bg-gray-900
           border-r border-gray-200 dark:border-gray-700
           transition-all duration-300
+          hidden md:flex
           ${sidebarOpen ? "w-64" : "w-20"}
         `}
       >
+        {/* ── Brand header ── */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
           {sidebarOpen && (
             <div className="flex items-center gap-2.5">
@@ -90,7 +79,9 @@ const Sidebar = () => {
           <button
             onClick={() => dispatch(toggleSidebar())}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition ml-auto"
+            aria-label="Toggle sidebar"
           >
+            {/* X shown only on mobile (shouldn't render here but kept for parity) */}
             <X
               size={18}
               className="md:hidden text-gray-500 dark:text-gray-400"
@@ -106,20 +97,17 @@ const Sidebar = () => {
           </button>
         </div>
 
+        {/* ── Nav items ── */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {menu.map(({ name, path, icon: Icon, end }) => (
+          {MENU.map(({ name, path, icon: Icon, end }) => (
             <li key={path} className="relative group list-none">
               <NavLink
                 to={path}
                 end={end}
                 className={({ isActive }) =>
                   `flex items-center gap-3 py-2.5 rounded-xl transition-all duration-200 font-medium text-sm
-                  ${sidebarOpen ? "px-3" : "justify-center px-0"}
-                  ${
-                    isActive
-                      ? "text-white shadow-sm"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                  }`
+                   ${sidebarOpen ? "px-3" : "justify-center px-0"}
+                   ${isActive ? "sidebar-active" : "sidebar-inactive"}`
                 }
                 style={({ isActive }) =>
                   isActive ? { background: "var(--edu-primary)" } : {}
@@ -149,12 +137,10 @@ const Sidebar = () => {
             </li>
           ))}
         </nav>
-
         <div
           className="mx-4 mb-2 h-px"
           style={{ background: "var(--edu-light)" }}
         />
-
         <div className="p-3 pb-2 flex-shrink-0">
           {sidebarOpen ? (
             <div
@@ -190,19 +176,17 @@ const Sidebar = () => {
             </div>
           )}
         </div>
-
         <div className="p-3 pb-4 flex-shrink-0">
           <li className="relative group list-none">
             <button
               onClick={handleLogout}
               disabled={loading}
               className={`
-                  cursor-pointer
-                flex items-center gap-3 py-2.5 rounded-xl transition-all duration-200 font-medium text-sm w-full
+                cursor-pointer flex items-center gap-3 py-2.5 rounded-xl
+                transition-all duration-200 font-medium text-sm w-full
                 ${sidebarOpen ? "px-3" : "justify-center px-0"}
-                text-gray-600 dark:text-gray-400 
-                hover:text-[var(--edu-primary)]
-                hover:bg-[var(--edu-light)]
+                text-gray-600 dark:text-gray-400
+                hover:text-[var(--edu-primary)] hover:bg-[var(--edu-light)]
                 dark:hover:bg-gray-800
                 disabled:opacity-50 disabled:cursor-not-allowed
               `}
@@ -210,11 +194,9 @@ const Sidebar = () => {
               <LogOut size={19} className="flex-shrink-0" />
               {sidebarOpen && <span className="truncate">Logout</span>}
             </button>
-
             {!sidebarOpen && (
               <div
                 className="
-              
                   absolute left-full top-1/2 -translate-y-1/2 ml-3
                   px-3 py-1.5 text-sm font-medium
                   bg-gray-900 dark:bg-white
