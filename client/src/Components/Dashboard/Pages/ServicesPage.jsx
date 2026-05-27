@@ -244,7 +244,19 @@ const ServicesPage = () => {
           </h2>
 
           {/* Mobile: cards */}
-          <div className="grid gap-3 sm:hidden">
+          <div
+            className="
+    grid gap-3 sm:hidden
+    max-h-[75vh]
+    overflow-y-auto
+    pr-2
+    scrollbar-thin
+    scrollbar-thumb-gray-400
+    dark:scrollbar-thumb-gray-600
+    scrollbar-track-transparent
+    scroll-smooth
+  "
+          >
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400">
                 <FolderKanban className="w-10 h-10 mb-2 opacity-30" />
@@ -262,7 +274,6 @@ const ServicesPage = () => {
               ))
             )}
           </div>
-
           {/* Desktop: table */}
           <div className="hidden sm:block bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
             <div className="overflow-x-auto">
