@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomeSection /> },
       { path: "work", element: <ProjectSection /> },
       { path: "view-work/:id", element: <ViewWork /> },
-      { path: "services", element: <SkillsSection /> },
+      { path: "services", element: <SkillsSection /> }, //chage element
       { path: "about", element: <AboutSection /> },
       { path: "skills", element: <SkillsSection /> },
       { path: "blog", element: <BlogSection /> },
