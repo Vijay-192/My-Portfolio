@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProjects,
@@ -9,9 +9,9 @@ import {
   selectProjectLoading,
   selectError,
 } from "../../redux-store/Projectslice";
+import { optimizeUrl, buildSrcSet } from "../../Utils/cloudinary";
 
 gsap.registerPlugin(ScrollTrigger);
-
 const ProjectSkeleton = () => (
   <section id="work" className="bg-black text-white">
     <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center gap-5 px-4">
@@ -20,14 +20,28 @@ const ProjectSkeleton = () => (
     </div>
     <div className="max-w-7xl mx-auto px-4 mb-24 flex justify-center gap-6 flex-wrap">
       {[80, 110, 75, 95, 85].map((w, i) => (
-        <div key={i} className="sk h-3 rounded-lg" style={{ width: w, animationDelay: `${i * 0.08}s` }} />
+        <div
+          key={i}
+          className="sk h-3 rounded-lg"
+          style={{ width: w, animationDelay: `${i * 0.08}s` }}
+        />
       ))}
     </div>
     <div className="max-w-7xl mx-auto px-4 flex flex-col gap-40 pb-32">
       {[0, 1].map((i) => (
-        <div key={i} className="flex flex-col lg:flex-row gap-20 items-start" style={{ opacity: i === 1 ? 0.45 : 1 }}>
-          <div className="sk hidden lg:block rounded-2xl flex-shrink-0" style={{ width: "60%", height: 520, animationDelay: `${i * 0.12}s` }} />
-          <div className="sk block lg:hidden w-full rounded-2xl" style={{ height: 300, animationDelay: `${i * 0.12}s` }} />
+        <div
+          key={i}
+          className="flex flex-col lg:flex-row gap-20 items-start"
+          style={{ opacity: i === 1 ? 0.45 : 1 }}
+        >
+          <div
+            className="sk hidden lg:block rounded-2xl flex-shrink-0"
+            style={{ width: "60%", height: 520, animationDelay: `${i * 0.12}s` }}
+          />
+          <div
+            className="sk block lg:hidden w-full rounded-2xl"
+            style={{ height: 300, animationDelay: `${i * 0.12}s` }}
+          />
           <div className="w-full lg:w-[45%] flex flex-col gap-4 pt-2 font-JetBrainsMono">
             <div className="flex items-center gap-4">
               <div className="sk h-7 w-10 rounded-full" />
@@ -55,17 +69,53 @@ const ProjectSkeleton = () => (
     </div>
   </section>
 );
+
+const getImageUrl = (project) => {
+  const rawUrl =
+    project.images?.[0] ||
+    project.image ||
+    project.imageUrl ||
+    project.thumbnail ||
+    project.img ||
+    project.coverImage ||
+    null;
+
+  if (!rawUrl) return null;
+
+  if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
+    if (rawUrl.includes("cloudinary.com")) {
+
+      return optimizeUrl(rawUrl, {
+        width: 1200,
+        height: 520,
+        quality: "auto",
+        format: "auto",
+        crop: "fill",
+      });
+    }
+    return rawUrl; 
+  }
+
+  // Relative URL — prepend base
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  return `${BASE_URL}${rawUrl.startsWith("/") ? rawUrl : `/${rawUrl}`}`;
+};
+
+
 const ProjectSection = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const projects = useSelector(selectProjects);
-  const loading = useSelector(selectProjectLoading);
-  const error = useSelector(selectError);
+  const navigate  = useNavigate();
+  const dispatch  = useDispatch();
+  const projects  = useSelector(selectProjects);
+  const loading   = useSelector(selectProjectLoading);
+  const error     = useSelector(selectError);        
   const projectRefs = useRef([]);
+
 
   useEffect(() => {
     if (projects.length === 0) dispatch(fetchProjects());
   }, [dispatch, projects.length]);
+
+
   useEffect(() => {
     if (projects.length === 0) return;
     const ctx = gsap.context(() => {
@@ -93,25 +143,11 @@ const ProjectSection = () => {
   const scrollToProject = (index) => {
     projectRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
   const handleViewProject = (e, projectId) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "instant" });
     navigate(`/view-work/${projectId}`);
-  };
-
-  const getImageUrl = (project) => {
-    const rawUrl =
-      project.images?.[0] ||
-      project.image ||
-      project.imageUrl ||
-      project.thumbnail ||
-      project.img ||
-      project.coverImage ||
-      null;
-    if (!rawUrl) return null;
-    if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) return rawUrl;
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    return `${BASE_URL}${rawUrl.startsWith("/") ? rawUrl : `/${rawUrl}`}`;
   };
 
   if (loading) return <ProjectSkeleton />;
@@ -119,7 +155,7 @@ const ProjectSection = () => {
   return (
     <section id="work" className="bg-black text-white">
 
-      {/* Hero */}
+      {/* ── Hero ── */}
       <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center text-center px-4">
         <h1 className="text-[20vw] md:text-[12vw] font-extrabold leading-none font-JetBrainsMono">
           work
@@ -129,7 +165,7 @@ const ProjectSection = () => {
         </p>
       </div>
 
-      {/* Nav */}
+      {/* ── Project Nav ── */}
       <div className="max-w-7xl mx-auto px-4 mb-24 font-JetBrainsMono">
         <div className="flex justify-center gap-4 flex-nowrap">
           {projects.map((p, i) => (
@@ -149,39 +185,63 @@ const ProjectSection = () => {
         </div>
       </div>
 
-      {/* Projects */}
+      {/* ── Project List ── */}
       <div className="max-w-7xl mx-auto px-4 flex flex-col gap-40 pb-32">
         {projects.map((project, index) => {
           const imageUrl = getImageUrl(project);
+          const projectId = project._id ?? project.id;
+
           return (
             <div
-              key={project._id ?? project.id}
+              key={projectId}
               ref={(el) => (projectRefs.current[index] = el)}
               className="project flex flex-col lg:flex-row gap-20 items-start"
             >
-              {/* Image */}
-              <div className="w-full lg:w-[60%] h-[300px] lg:h-[520px] rounded-2xl overflow-hidden bg-white/5">
+              {/* ── Image ── */}
+              <div className="w-full lg:w-[60%] h-[300px] lg:h-[520px] rounded-2xl overflow-hidden bg-white/5 flex-shrink-0">
                 {imageUrl ? (
                   <img
                     src={imageUrl}
+                    
+                    srcSet={
+                      imageUrl.includes("cloudinary.com")
+                        ? buildSrcSet(
+                     
+                            project.images?.[0] ||
+                            project.image ||
+                            project.imageUrl ||
+                            project.thumbnail ||
+                            project.img ||
+                            project.coverImage,
+                            [400, 800, 1200]
+                          )
+                        : undefined
+                    }
+                    sizes="(max-width: 768px) 100vw, 60vw"
                     alt={project.title}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       e.target.style.display = "none";
                       e.target.parentElement.innerHTML = `
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-family:monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+                          color:rgba(255,255,255,0.2);font-family:monospace;font-size:12px;
+                          letter-spacing:2px;text-transform:uppercase;">
                           Image not found
                         </div>`;
                     }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <p className="font-JetBrainsMono text-white/20 text-xs tracking-widest uppercase">No image</p>
+                    <p className="font-JetBrainsMono text-white/20 text-xs tracking-widest uppercase">
+                      No image
+                    </p>
                   </div>
                 )}
               </div>
 
-              {/* Details */}
+              {/* ── Details ── */}
               <div className="w-full lg:w-[45%] font-JetBrainsMono">
                 <div className="mb-16">
                   <div className="flex items-center gap-4 mb-6">
@@ -192,14 +252,18 @@ const ProjectSection = () => {
                       {project.title}
                     </h2>
                   </div>
-                  <p className="text-white/50 max-w-lg line-clamp-3">{project.description}</p>
+                  <p className="text-white/50 max-w-lg line-clamp-3">
+                    {project.description}
+                  </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-16">
-                  {/* Left */}
                   <div className="flex-1 space-y-10">
+                    {/* Live Site */}
                     <div>
-                      <p className="text-white/40 uppercase tracking-widest mb-2 text-xs">Live Site</p>
+                      <p className="text-white/40 uppercase tracking-widest mb-2 text-xs">
+                        Live Site
+                      </p>
                       <a
                         href={project.liveLink || project.site}
                         target="_blank"
@@ -209,34 +273,48 @@ const ProjectSection = () => {
                         {(project.liveLink || project.site)?.replace("https://", "")}
                       </a>
                     </div>
+
+                    {/* Deliverables */}
                     <div>
-                      <p className="text-white/40 uppercase tracking-widest mb-3 text-xs">Deliverables</p>
+                      <p className="text-white/40 uppercase tracking-widest mb-3 text-xs">
+                        Deliverables
+                      </p>
                       <ul className="space-y-1 text-sm">
                         {(project.deliverables ?? []).map((item, i) => (
-                          <li key={i} className="break-words whitespace-normal">{item}</li>
+                          <li key={i} className="break-words whitespace-normal">
+                            {item}
+                          </li>
                         ))}
                       </ul>
                     </div>
 
-                    {/* View Project — scrolls to top first, then navigates */}
+                    {/* View Project link */}
                     <a
-                      href={`/view-work/${project._id ?? project.id}`}
-                      onClick={(e) => handleViewProject(e, project._id ?? project.id)}
+                      href={`/view-work/${projectId}`}
+                      onClick={(e) => handleViewProject(e, projectId)}
                       className="uppercase cursor-pointer tracking-widest text-xs border-b border-white/60 pb-1 hover:opacity-70 transition inline-block"
                     >
                       View Project
                     </a>
                   </div>
 
-                  {/* Right */}
+                  {/* Industry + Year */}
                   <div className="w-full sm:w-[180px] ml-auto sm:ml-0 -mt-74 sm:mt-0 text-right sm:text-left space-y-8 font-JetBrainsMono">
                     <div className="ml-auto text-right">
-                      <p className="text-xs uppercase tracking-widest text-white/40 mb-2">Industry</p>
-                      <p className="text-sm text-white/90 leading-relaxed">{project.industry}</p>
+                      <p className="text-xs uppercase tracking-widest text-white/40 mb-2">
+                        Industry
+                      </p>
+                      <p className="text-sm text-white/90 leading-relaxed">
+                        {project.industry}
+                      </p>
                     </div>
                     <div className="ml-auto text-right">
-                      <p className="text-xs uppercase tracking-widest text-white/40 mb-2">Published</p>
-                      <p className="text-sm text-white/90 leading-relaxed">©{project.publishYear ?? project.year}</p>
+                      <p className="text-xs uppercase tracking-widest text-white/40 mb-2">
+                        Published
+                      </p>
+                      <p className="text-sm text-white/90 leading-relaxed">
+                        ©{project.publishYear ?? project.year}
+                      </p>
                     </div>
                   </div>
                 </div>

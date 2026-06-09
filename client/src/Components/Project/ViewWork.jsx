@@ -41,13 +41,17 @@ function LoadingSkeleton() {
         </aside>
         <main className="w-full lg:w-[70%] mx-auto flex flex-col gap-6 px-4 sm:px-6 lg:px-0 py-8">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="w-full rounded-3xl bg-black/10" style={{ height: "80vh" }} />
+            <div
+              key={i}
+              className="w-full rounded-3xl bg-black/10 aspect-video"
+            />
           ))}
         </main>
       </div>
     </div>
   );
 }
+
 function TestimonialSection({ project }) {
   const sectionRef = useRef(null);
 
@@ -83,14 +87,22 @@ function TestimonialSection({ project }) {
         <div className="testi-item flex-shrink-0 w-full md:w-auto flex justify-center md:justify-start">
           <div className="relative w-48 h-64 sm:w-56 sm:h-72 md:w-64 md:h-80 rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/10">
             {testimonialImage ? (
-              <img src={testimonialImage} alt={testimonial?.name} className="w-full h-full object-cover" />
+              <img
+                src={testimonialImage}
+                alt={testimonial?.name}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full bg-black/10 flex items-center justify-center">
-                <span className="font-JetBrainsMono text-black/30 text-xs tracking-widest uppercase">No photo</span>
+                <span className="font-JetBrainsMono text-black/30 text-xs tracking-widest uppercase">
+                  No photo
+                </span>
               </div>
             )}
             <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-4">
-              <p className="font-semibold text-sm leading-tight">{testimonial?.name}</p>
+              <p className="font-semibold text-sm leading-tight">
+                {testimonial?.name}
+              </p>
               <p className="text-xs opacity-75 mt-0.5">{testimonial?.post}</p>
             </div>
           </div>
@@ -98,21 +110,29 @@ function TestimonialSection({ project }) {
         <div className="testi-item max-w-xl font-JetBrainsMono w-full">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-4 h-px bg-black/40" />
-            <p className="text-[11px] tracking-[0.3em] uppercase text-black/50 font-medium">Testimonial</p>
+            <p className="text-[11px] tracking-[0.3em] uppercase text-black/50 font-medium">
+              Testimonial
+            </p>
           </div>
-          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mb-2 select-none">&ldquo;</div>
+          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mb-2 select-none">
+            &ldquo;
+          </div>
           <blockquote className="text-[13px] sm:text-[15px] md:text-[16px] leading-relaxed text-gray-800 font-light italic">
             {testimonial?.description}
           </blockquote>
-          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mt-2 text-right select-none">&rdquo;</div>
+          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mt-2 text-right select-none">
+            &rdquo;
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 function AutoplayVideo({ src, isVisible }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+
   useEffect(() => {
     if (!isVisible) {
       videoRef.current?.pause();
@@ -138,7 +158,8 @@ function AutoplayVideo({ src, isVisible }) {
   return (
     <div
       ref={containerRef}
-      className="w-full aspect-video sm:aspect-[16/10] lg:aspect-auto lg:h-[90vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg"
+     
+      className="w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg"
     >
       <video
         ref={videoRef}
@@ -151,6 +172,7 @@ function AutoplayVideo({ src, isVisible }) {
     </div>
   );
 }
+
 function MediaImage({ src, index }) {
   const imgRef = useRef(null);
 
@@ -176,12 +198,14 @@ function MediaImage({ src, index }) {
   return (
     <div
       ref={imgRef}
-      className="w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-[90vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg group"
+    
+      className="w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg group"
     >
       <img
         src={src}
         alt={`Project image ${index + 1}`}
-        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+       
+        className="w-full h-auto block object-contain bg-black/5 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
       />
     </div>
   );
@@ -192,7 +216,8 @@ function MobileTabBar({ activeTab, onChange }) {
   const mediaBtnRef = useRef(null);
 
   useEffect(() => {
-    const activeEl = activeTab === "about" ? aboutBtnRef.current : mediaBtnRef.current;
+    const activeEl =
+      activeTab === "about" ? aboutBtnRef.current : mediaBtnRef.current;
     if (!activeEl || !indicatorRef.current) return;
     const { offsetLeft, offsetWidth } = activeEl;
     gsap.to(indicatorRef.current, {
@@ -206,7 +231,6 @@ function MobileTabBar({ activeTab, onChange }) {
   return (
     <div className="lg:hidden sticky top-0 z-40 bg-gray-200/95 backdrop-blur-sm border-b border-black/8 px-4 sm:px-8 py-3">
       <div className="relative flex gap-1 bg-black/6 rounded-xl p-1 w-full max-w-xs">
-        {/* Sliding indicator */}
         <div
           ref={indicatorRef}
           className="absolute top-1 left-1 h-[calc(100%-8px)] bg-black rounded-lg pointer-events-none"
@@ -215,13 +239,18 @@ function MobileTabBar({ activeTab, onChange }) {
         <button
           ref={aboutBtnRef}
           onClick={() => onChange("about")}
-          className={`
-            relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg
-            text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300
-            ${activeTab === "about" ? "text-white" : "text-black/50"}
-          `}
+          className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300 ${
+            activeTab === "about" ? "text-white" : "text-black/50"
+          }`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="w-3.5 h-3.5"
+          >
             <circle cx="12" cy="12" r="10" />
             <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
           </svg>
@@ -230,13 +259,18 @@ function MobileTabBar({ activeTab, onChange }) {
         <button
           ref={mediaBtnRef}
           onClick={() => onChange("media")}
-          className={`
-            relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg
-            text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300
-            ${activeTab === "media" ? "text-white" : "text-black/50"}
-          `}
+          className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300 ${
+            activeTab === "media" ? "text-white" : "text-black/50"
+          }`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="w-3.5 h-3.5"
+          >
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <path d="M3 9h18M9 21V9" strokeLinecap="round" />
           </svg>
@@ -249,12 +283,14 @@ function MobileTabBar({ activeTab, onChange }) {
 function AboutContent({ project, headerRef, metaRef, detailRef }) {
   return (
     <div className="flex flex-col gap-8 lg:gap-10 w-full">
-
-      {/* BRAND */}
       <div ref={headerRef} className="space-y-3">
         <div className="flex items-center gap-3">
           {project.projectIcon ? (
-            <img src={project.projectIcon} alt="icon" className="w-7 h-7 rounded object-cover" />
+            <img
+              src={project.projectIcon}
+              alt="icon"
+              className="w-7 h-7 rounded object-cover"
+            />
           ) : (
             <div className="w-6 h-6 lg:w-7 lg:h-7 rounded bg-black" />
           )}
@@ -267,21 +303,25 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
         </p>
       </div>
 
-      {/* META GRID */}
-      <div
-        ref={metaRef}
-        className="grid grid-cols-2 gap-y-7 gap-x-6 text-sm"
-      >
+      <div ref={metaRef} className="grid grid-cols-2 gap-y-7 gap-x-6 text-sm">
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">Industry</p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+            Industry
+          </p>
           <p className="text-sm font-medium">{project.industry}</p>
         </div>
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">Published</p>
-          <p className="text-sm font-medium">© {project.publishYear ?? project.year}</p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+            Published
+          </p>
+          <p className="text-sm font-medium">
+            © {project.publishYear ?? project.year}
+          </p>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">Live Site</p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+            Live Site
+          </p>
           <a
             href={project.liveLink || project.site}
             target="_blank"
@@ -294,17 +334,33 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
                 .replace("http://", "")
                 .replace("www.", "")}
             </span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="w-3.5 h-3.5 flex-shrink-0"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h10v10" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 7h10v10"
+              />
             </svg>
           </a>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-3">Deliverables</p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-3">
+            Deliverables
+          </p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
             {(project.deliverables ?? []).map((item) => (
-              <li key={item} className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-black/60">
+              <li
+                key={item}
+                className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-black/60"
+              >
                 <span className="w-1 h-1 rounded-full bg-black/35 flex-shrink-0" />
                 {item}
               </li>
@@ -313,14 +369,14 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
         </div>
       </div>
 
-      {/* DIVIDER */}
       <div className="w-full h-px bg-black/10" />
 
-      {/* PROBLEM / SOLUTION / TECH */}
       <div ref={detailRef} className="space-y-7">
         {(project.problemStatement ?? project.problem) && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">Problem</h3>
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">
+              Problem
+            </h3>
             <p className="text-[13px] leading-relaxed text-black/65">
               {project.problemStatement ?? project.problem}
             </p>
@@ -328,13 +384,19 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
         )}
         {project.solution && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">Solution</h3>
-            <p className="text-[13px] leading-relaxed text-black/65">{project.solution}</p>
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">
+              Solution
+            </h3>
+            <p className="text-[13px] leading-relaxed text-black/65">
+              {project.solution}
+            </p>
           </div>
         )}
         {project.techStack?.length > 0 && (
           <div>
-            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40 mb-3">Tech Stack</p>
+            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40 mb-3">
+              Tech Stack
+            </p>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
@@ -374,7 +436,11 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
   }
 
   return (
-    <div ref={mediaRef} className="flex flex-col gap-4 sm:gap-5 w-full pb-6 lg:pb-0 pt-2 lg:pt-5">
+   
+    <div
+      ref={mediaRef}
+      className="flex flex-col gap-5 sm:gap-6 w-full pb-8 lg:pb-12 pt-2 lg:pt-6"
+    >
       {allImages.map((src, i) => (
         <div key={i} className="media-item">
           <MediaImage src={src} index={i} />
@@ -416,9 +482,27 @@ function ViewWork() {
   useEffect(() => {
     if (loading) return;
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    if (headerRef.current) tl.fromTo(headerRef.current, { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.75 }, 0.05);
-    if (metaRef.current)   tl.fromTo(metaRef.current,   { y: -35, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7  }, 0.2);
-    if (detailRef.current) tl.fromTo(detailRef.current, { y: -25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65 }, 0.35);
+    if (headerRef.current)
+      tl.fromTo(
+        headerRef.current,
+        { y: -50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.75 },
+        0.05
+      );
+    if (metaRef.current)
+      tl.fromTo(
+        metaRef.current,
+        { y: -35, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7 },
+        0.2
+      );
+    if (detailRef.current)
+      tl.fromTo(
+        detailRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.65 },
+        0.35
+      );
   }, [loading]);
   useEffect(() => {
     if (activeTab !== "about" || !aboutPanelRef.current) return;
@@ -473,10 +557,9 @@ function ViewWork() {
           </aside>
           <main
             className={`
-              w-full lg:w-[70%]
-              mx-auto
+              w-full lg:flex-1
               flex flex-col
-              px-0 sm:px-2 lg:px-0
+              px-0 sm:px-2 lg:px-6
               ${activeTab === "about" ? "hidden lg:flex" : "flex"}
             `}
           >
@@ -487,16 +570,11 @@ function ViewWork() {
               isVisible={activeTab === "media"}
             />
           </main>
-
         </div>
       </div>
 
-      {/* ── TESTIMONIAL ── */}
       <TestimonialSection project={project} />
-
-      {/* ── NEXT PROJECT CAROUSEL ── */}
       <NextProjectCarousel />
-
       <BookACall />
     </>
   );

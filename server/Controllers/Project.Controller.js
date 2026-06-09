@@ -1,7 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { Project } from "../Models/Project.model.js";
 
-
 const deleteFromCloudinary = async (url, resourceType = "image") => {
   if (!url) return;
   try {
@@ -20,21 +19,25 @@ const deleteMultipleFromCloudinary = async (urls = [], resourceType = "image") =
   await Promise.all(urls.map((url) => deleteFromCloudinary(url, resourceType)));
 };
 
-
 const parseArray = (value) => {
   if (!value) return [];
-  if (Array.isArray(value)) return value.filter(Boolean);
-  return value.split(",").map((t) => t.trim()).filter(Boolean);
+  if (Array.isArray(value)) return value.map((t) => String(t).trim()).filter(Boolean);
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.map((t) => String(t).trim()).filter(Boolean);
+  } catch (_) {}
+
+  return value.split(/[\n,]+/).map((t) => t.trim()).filter(Boolean);
 };
 
 const buildTestimonial = (body, profileImageUrl = null) => {
   const { testimonialName, testimonialPost, testimonialDescription } = body;
   if (!testimonialName && !testimonialDescription) return null;
   return {
-    name: testimonialName || "",
-    post: testimonialPost || "",
-    description: testimonialDescription || "",
-    profileImage: profileImageUrl || null,
+    name:         testimonialName        || "",
+    post:         testimonialPost        || "",
+    description:  testimonialDescription || "",
+    profileImage: profileImageUrl        || null,
   };
 };
 
@@ -51,10 +54,11 @@ export const createProject = async (req, res) => {
     if (!title) {
       return res.status(400).json({ success: false, message: "Title is required" });
     }
-    const imageFiles    = req.files?.images      || [];
-    const videoFile     = req.files?.video?.[0];
-    const iconFile      = req.files?.projectIcon?.[0];
-    const profileFile   = req.files?.profileImage?.[0];
+
+    const imageFiles  = req.files?.images       || [];
+    const videoFile   = req.files?.video?.[0];
+    const iconFile    = req.files?.projectIcon?.[0];
+    const profileFile = req.files?.profileImage?.[0];
 
     const testimonial = buildTestimonial(req.body, profileFile?.path || null);
 
@@ -63,16 +67,16 @@ export const createProject = async (req, res) => {
       description,
       category,
       industry,
-      publishYear: publishYear ? Number(publishYear) : undefined,
+      publishYear:      publishYear ? Number(publishYear) : undefined,
       problemStatement,
       solution,
-      techStack:    parseArray(techStack),
-      deliverables: parseArray(deliverables),
+      techStack:        parseArray(techStack),
+      deliverables:     parseArray(deliverables),
       liveLink,
       githubLink,
-      projectIcon: iconFile?.path   || null,
-      images:      imageFiles.map((f) => f.path),
-      video:       videoFile?.path  || null,
+      projectIcon:  iconFile?.path  || null,
+      images:       imageFiles.map((f) => f.path),
+      video:        videoFile?.path || null,
       testimonial,
     });
 
@@ -89,14 +93,9 @@ export const createProject = async (req, res) => {
         errors: error.errors,
       });
     }
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
   }
 };
-
 export const getProjects = async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
@@ -131,51 +130,58 @@ export const updateProject = async (req, res) => {
       industry, publishYear,
       problemStatement, solution, deliverables,
       testimonialName, testimonialPost, testimonialDescription,
+      existingImages,   // ← JSON string sent by frontend: URLs to KEEP
     } = req.body;
 
-    // Core fields
-    if (title)                          project.title            = title;
-    if (description !== undefined)      project.description      = description;
-    if (liveLink !== undefined)         project.liveLink         = liveLink;
-    if (githubLink !== undefined)       project.githubLink       = githubLink;
-    if (category)                       project.category         = category;
 
-    // New fields
-    if (industry)                       project.industry         = industry;
-    if (publishYear !== undefined)      project.publishYear      = publishYear ? Number(publishYear) : project.publishYear;
-    if (problemStatement !== undefined) project.problemStatement = problemStatement;
-    if (solution !== undefined)         project.solution         = solution;
+    if (title !== undefined)              project.title            = title;
+    if (description !== undefined)        project.description      = description;
+    if (liveLink !== undefined)           project.liveLink         = liveLink;
+    if (githubLink !== undefined)         project.githubLink       = githubLink;
+    if (category)                         project.category         = category;
+    if (industry)                         project.industry         = industry;
+    if (publishYear !== undefined)        project.publishYear      = publishYear ? Number(publishYear) : project.publishYear;
+    if (problemStatement !== undefined)   project.problemStatement = problemStatement;
+    if (solution !== undefined)           project.solution         = solution;
+    if (techStack)                        project.techStack        = parseArray(techStack);
+    if (deliverables)                     project.deliverables     = parseArray(deliverables);
+    const newImageFiles = req.files?.images || [];
 
-    if (techStack)    project.techStack    = parseArray(techStack);
-    if (deliverables) project.deliverables = parseArray(deliverables);
+    if (existingImages !== undefined || newImageFiles.length > 0) {
+      let urlsToKeep = [];
+      if (existingImages) {
+        try {
+          urlsToKeep = JSON.parse(existingImages);
+          if (!Array.isArray(urlsToKeep)) urlsToKeep = [];
+        } catch (_) {
+          urlsToKeep = [];
+        }
+      } else {
+        urlsToKeep = [...project.images];
+      }
+      const urlsToDelete = project.images.filter((url) => !urlsToKeep.includes(url));
+      if (urlsToDelete.length > 0) {
+        await deleteMultipleFromCloudinary(urlsToDelete, "image");
+      }
 
-    // ── Images ────────────────────────────────────────────
-    const imageFiles = req.files?.images || [];
-    if (imageFiles.length > 0) {
-      await deleteMultipleFromCloudinary(project.images, "image");
-      project.images = imageFiles.map((f) => f.path);
+      const newUploadedUrls = newImageFiles.map((f) => f.path);
+      project.images = [...urlsToKeep, ...newUploadedUrls].slice(0, 7);
     }
 
-    // ── Video ─────────────────────────────────────────────
     const videoFile = req.files?.video?.[0];
     if (videoFile) {
       await deleteFromCloudinary(project.video, "video");
       project.video = videoFile.path;
     }
-
-    // ── Project Icon ──────────────────────────────────────
     const iconFile = req.files?.projectIcon?.[0];
     if (iconFile) {
       await deleteFromCloudinary(project.projectIcon, "image");
       project.projectIcon = iconFile.path;
     }
-
-    // ── Testimonial ───────────────────────────────────────
     const profileFile = req.files?.profileImage?.[0];
     const hasTestimonialText = testimonialName || testimonialDescription;
 
     if (hasTestimonialText) {
-      // Delete old profile image if new one uploaded
       if (profileFile && project.testimonial?.profileImage) {
         await deleteFromCloudinary(project.testimonial.profileImage, "image");
       }
@@ -183,15 +189,14 @@ export const updateProject = async (req, res) => {
         name:         testimonialName        || project.testimonial?.name        || "",
         post:         testimonialPost        || project.testimonial?.post        || "",
         description:  testimonialDescription || project.testimonial?.description || "",
-        profileImage: profileFile?.path || project.testimonial?.profileImage || null,
+        profileImage: profileFile?.path      || project.testimonial?.profileImage || null,
       };
     } else if (profileFile) {
-      // Only profile image updated (no text changes)
       if (project.testimonial?.profileImage) {
         await deleteFromCloudinary(project.testimonial.profileImage, "image");
       }
       project.testimonial = {
-        ...project.testimonial?.toObject?.() || {},
+        ...(project.testimonial?.toObject?.() || {}),
         profileImage: profileFile.path,
       };
     }
