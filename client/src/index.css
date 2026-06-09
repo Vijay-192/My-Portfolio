@@ -12,6 +12,7 @@
 
 * {
   scrollbar-width: none;
+  user-select: none;
 }
 
 @layer utilities {}

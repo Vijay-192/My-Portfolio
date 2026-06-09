@@ -7,7 +7,7 @@ import {
   selectBlogs,
   selectBlogLoading,
 } from "../../redux-store/BlogSlice";
-
+// update blog part 
 const SkeletonCard = ({ flex }) => (
   <motion.div
     layout

@@ -8,7 +8,7 @@ import {
   selectProjects,
   selectProjectLoading,
 } from "../../redux-store/Projectslice";
-
+// view img 
 import NextProjectCarousel from "./NextProjectCarousel";
 import Page404 from "../404/PageNotFound404";
 import BookACall from "./BookACall";
