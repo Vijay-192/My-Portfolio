@@ -54,13 +54,16 @@ function App() {
     "/view-blog",
      "/privacy-policy",   
     "/terms-of-use",
+    "gallery",
   ];
 
   const hideStaticLayout = hideLayoutRoutes.includes(location.pathname);
   const hideDynamicLayout =
     location.pathname.startsWith("/view-work/") ||
     location.pathname.startsWith("/view-blog/") ||
-    location.pathname.startsWith("/view-blog/all/");
+    location.pathname.startsWith("/view-blog/all/") ||
+    location.pathname.startsWith("/gallery");
+    ;
 
   const hideLayout = hideStaticLayout || hideDynamicLayout;
   if (isAppLoading) {

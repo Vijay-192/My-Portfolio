@@ -9,6 +9,8 @@ import serviceReducer from "../ServiceSlice";
 import educationReducer from "../EducationSlice";
 import achievementReducer from "../AchievementSlice";
 import bookingReducer from "../Bookingslice";
+import resumeReducer from "../ResumeSlice";
+import galleryReducer from "../GallerySlice";
 import dashboardReducer from "../Dashboardslice";
 export const store = configureStore({
   reducer: {
@@ -22,6 +24,8 @@ export const store = configureStore({
     education: educationReducer,
     achievements: achievementReducer,
     booking: bookingReducer,
+    resume: resumeReducer,
+    gallery: galleryReducer,
     dashboard: dashboardReducer,
   },
   middleware: (getDefaultMiddleware) =>

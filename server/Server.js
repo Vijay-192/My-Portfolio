@@ -10,6 +10,9 @@ import skillRoutes from "./Routes/Skill.route.js"
 import authRoutes from "./Routes/Auth.route.js"
 import achievementRoutes from "./Routes/Achievement.route.js"
 import bookingRoutes from "./Routes/Booking.route.js"
+import resumeRoutes from "./Routes/Resume.route.js";
+import { cvRouter } from "./Routes/Resume.route.js";
+import galleryRoutes from "./Routes/Gallery.route.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 //  Middlewares
@@ -31,7 +34,9 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
-
+app.use("/api/resume", resumeRoutes);
+app.use("/api/cv", cvRouter); 
+app.use("/api/gallery", galleryRoutes);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });

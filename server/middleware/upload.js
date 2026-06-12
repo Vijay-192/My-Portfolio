@@ -2,31 +2,67 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary.js";
 
-
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 const ALLOWED_ALL = new Set([
-  "image/jpeg", "image/jpg", "image/png", "image/webp",
-  "image/gif", "image/svg+xml", "image/bmp", "image/tiff",
-  "image/ico", "image/heic", "image/heif",
-  "image/vnd.adobe.photoshop", "application/postscript",
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+  "image/bmp",
+  "image/tiff",
+  "image/ico",
+  "image/heic",
+  "image/heif",
+  "image/vnd.adobe.photoshop",
+  "application/postscript",
   "application/illustrator",
-  "video/mp4", "video/quicktime", "video/avi",
-  "video/webm", "video/x-msvideo",
-  "application/xml", "text/xml",
+  "video/mp4",
+  "video/quicktime",
+  "video/avi",
+  "video/webm",
+  "video/x-msvideo",
+  "application/xml",
+  "text/xml",
 ]);
 
 const ALLOWED_IMAGES_ONLY = new Set([
-  "image/jpeg", "image/jpg", "image/png", "image/webp",
-  "image/gif", "image/svg+xml", "image/heic",
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+  "image/heic",
 ]);
 
+const ALLOWED_RESUME_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]);
+
+const ALLOWED_GALLERY = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/quicktime",
+  "video/avi",
+  "video/webm",
+]);
 
 const fileFilter = (_req, file, cb) => {
   ALLOWED_ALL.has(file.mimetype)
     ? cb(null, true)
     : cb(new Error(`Invalid file type: ${file.mimetype}`), false);
 };
-
 
 const blogFileFilter = (_req, file, cb) => {
   ALLOWED_IMAGES_ONLY.has(file.mimetype)
@@ -39,6 +75,27 @@ const blogFileFilter = (_req, file, cb) => {
       );
 };
 
+const resumeFileFilter = (_req, file, cb) => {
+  ALLOWED_RESUME_TYPES.has(file.mimetype)
+    ? cb(null, true)
+    : cb(
+        new Error(
+          `Invalid file type: "${file.mimetype}". Only PDF, DOC, and DOCX files are allowed.`
+        ),
+        false
+      );
+};
+
+const galleryFileFilter = (_req, file, cb) => {
+  ALLOWED_GALLERY.has(file.mimetype)
+    ? cb(null, true)
+    : cb(
+        new Error(
+          `Invalid file type: ${file.mimetype}. Gallery accepts images and videos only.`
+        ),
+        false
+      );
+};
 
 const smartProjectStorage = new CloudinaryStorage({
   cloudinary,
@@ -74,7 +131,6 @@ const smartProjectStorage = new CloudinaryStorage({
       };
     }
 
-    // Default → project screenshot / image
     return {
       folder: "portfolio/projects/images",
       resource_type: "image",
@@ -82,7 +138,6 @@ const smartProjectStorage = new CloudinaryStorage({
     };
   },
 });
-
 
 const blogStorage = new CloudinaryStorage({
   cloudinary,
@@ -123,7 +178,6 @@ const blogStorage = new CloudinaryStorage({
   },
 });
 
-
 const serviceStorage = new CloudinaryStorage({
   cloudinary,
   params: async () => ({
@@ -141,57 +195,108 @@ const achievementStorage = new CloudinaryStorage({
     public_id: `achievement-${uid()}`,
   }),
 });
+
+
+const resumeStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "portfolio/resumes",
+    resource_type: "raw",  
+    allowed_formats: ["pdf", "doc", "docx"],
+    use_filename: true,
+    unique_filename: true,
+  },
+});
+
+const galleryStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (_req, file) => {
+    const isVideo = file.mimetype.startsWith("video/");
+
+    if (isVideo) {
+      return {
+        folder: "portfolio/gallery/videos",
+        resource_type: "video",
+        public_id: `gallery-video-${uid()}`,
+      };
+    }
+
+    return {
+      folder: "portfolio/gallery/images",
+      resource_type: "image",
+      public_id: `gallery-img-${uid()}`,
+      transformation: [{ quality: "auto", fetch_format: "auto" }],
+    };
+  },
+});
+
 export const uploadProjectSmart = multer({
   storage: smartProjectStorage,
   fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  limits: { fileSize: 100 * 1024 * 1024 },
 }).fields([
-  { name: "images",       maxCount: 7 },
-  { name: "video",        maxCount: 1 },
-  { name: "projectIcon",  maxCount: 1 },
+  { name: "images", maxCount: 7 },
+  { name: "video", maxCount: 1 },
+  { name: "projectIcon", maxCount: 1 },
   { name: "profileImage", maxCount: 1 },
 ]);
 
 export const uploadBlogFiles = multer({
   storage: blogStorage,
   fileFilter: blogFileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+  limits: { fileSize: 10 * 1024 * 1024 },
 }).fields([
-  { name: "coverImage",   maxCount: 1 },
+  { name: "coverImage", maxCount: 1 },
   { name: "authorAvatar", maxCount: 1 },
 ]);
 
 export const uploadService = multer({
   storage: serviceStorage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 }).fields([{ name: "images", maxCount: 2 }]);
 
 export const uploadAchievement = multer({
   storage: achievementStorage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 }).fields([{ name: "images", maxCount: 7 }]);
 
+export const uploadResume = multer({
+  storage: resumeStorage,
+  fileFilter: resumeFileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single("resume");
 
+export const uploadCV = multer({
+  storage: resumeStorage,
+  fileFilter: resumeFileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single("cv");
 
-/** @deprecated Use uploadProjectSmart instead */
 export const uploadImage = multer({
   storage: smartProjectStorage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 }).single("image");
 
-/** @deprecated Use uploadProjectSmart instead */
 export const uploadVideo = multer({
   storage: smartProjectStorage,
   fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  limits: { fileSize: 100 * 1024 * 1024 },
 }).single("video");
 
-/** @deprecated Use uploadBlogFiles instead */
 export const uploadBlogImage = multer({
   storage: blogStorage,
   fileFilter: blogFileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 }).single("image");
+
+export const uploadGallery = multer({
+  storage: galleryStorage,
+  fileFilter: galleryFileFilter,
+  limits: { fileSize: 100 * 1024 * 1024 },
+}).fields([
+  { name: "images", maxCount: 10 },
+  { name: "video", maxCount: 1 },
+]);
