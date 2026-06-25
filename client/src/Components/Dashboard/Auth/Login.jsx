@@ -4,24 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { loginThunk, clearError } from "../../../redux-store/authSlice";
 
-const EDU = {
-  primary:      "#0C4733",
-  primaryHover: "#083826",
-  accent:       "#4E9C79",
-  light:        "#EEF6F2",
-};
-
-const inputCls =
-  "w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none transition";
-
-const inputStyle = {
-  "--tw-ring-color": EDU.accent,
-};
+const inp =
+  "w-full px-4 py-3 rounded-xl border border-zinc-800 bg-zinc-900 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition";
 
 function Login() {
-  const navigate  = useNavigate();
-  const location  = useLocation();
-  const dispatch  = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const { loading, error } = useSelector((s) => s.auth);
 
   const from       = location.state?.from?.pathname || "/dashboard";
@@ -30,115 +19,89 @@ function Login() {
   const [form, setForm]         = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
 
-  const handleChange = (e) => {
-    dispatch(clearError());
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-  };
+  const onChange = (e) => { dispatch(clearError()); setForm((p) => ({ ...p, [e.target.name]: e.target.value })); };
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(loginThunk(form));
-    if (loginThunk.fulfilled.match(result)) navigate(from, { replace: true });
+    const r = await dispatch(loginThunk(form));
+    if (loginThunk.fulfilled.match(r)) navigate(from, { replace: true });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-gray-950">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-sm space-y-3">
 
-        {/* Card */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-
-          {/* Header bar */}
-          <div style={{ background: EDU.primary }} className="px-8 py-6">
-            <div className="flex items-center gap-3">
-              <div style={{ background: "rgba(255,255,255,0.15)" }} className="w-9 h-9 rounded-lg flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-white font-semibold text-lg leading-tight">Welcome Back</h1>
-                <p style={{ color: "rgba(255,255,255,0.6)" }} className="text-xs mt-0.5">Sign in to your account</p>
-              </div>
-            </div>
+        {/* Logo / Brand */}
+        <div className="text-center mb-8">
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-white items-center justify-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
           </div>
-
-          <div className="px-8 py-7 space-y-5">
-
-            {successMsg && (
-              <div style={{ background: EDU.light, borderColor: EDU.accent }} className="p-3 rounded-lg border text-sm" >
-                <span style={{ color: EDU.primary }} className="font-medium">{successMsg}</span>
-              </div>
-            )}
-
-            {error && (
-              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
-                {typeof error === "string" ? error : error?.message || "Something went wrong."}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
-                <input
-                  type="email" name="email" value={form.email} onChange={handleChange}
-                  placeholder="john@example.com" className={inputCls}
-                  style={{ "--tw-ring-color": EDU.accent }}
-                  onFocus={e => e.target.style.boxShadow = `0 0 0 2px ${EDU.accent}40, 0 0 0 1px ${EDU.accent}`}
-                  onBlur={e  => e.target.style.boxShadow = ""}
-                  required
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                  <Link to="/forgot-password" style={{ color: EDU.accent }} className="text-xs hover:underline font-medium">
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <input
-                    type={showPass ? "text" : "password"} name="password" value={form.password}
-                    onChange={handleChange} placeholder="Enter your password"
-                    className={`${inputCls} pr-10`}
-                    onFocus={e => e.target.style.boxShadow = `0 0 0 2px ${EDU.accent}40, 0 0 0 1px ${EDU.accent}`}
-                    onBlur={e  => e.target.style.boxShadow = ""}
-                    required
-                  />
-                  <button type="button" onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
-                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit" disabled={loading}
-                style={{ background: loading ? EDU.accent : EDU.primary }}
-                className="w-full py-3 rounded-lg text-white font-semibold text-sm transition-all disabled:opacity-60 flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.99]"
-              >
-                {loading
-                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
-                  : "Sign In"}
-              </button>
-
-            </form>
-
-            {/* <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-              Don't have an account?{" "}
-              <Link to="/register" style={{ color: EDU.primary }} className="font-semibold hover:underline">
-                Register
-              </Link>
-            </p> */}
-
-          </div>
+          <h1 className="text-white text-2xl font-bold tracking-tight">Welcome back</h1>
+          <p className="text-zinc-500 text-sm mt-1">Sign in to your account</p>
         </div>
 
-        {/* Bottom accent line */}
-        <div style={{ background: EDU.light }} className="h-1 rounded-b-xl mx-6" />
+        {/* Card */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-4">
 
+          {successMsg && (
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-zinc-900 border border-zinc-700 text-sm text-zinc-300">
+              <svg className="w-4 h-4 mt-0.5 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="12" cy="12" r="10" strokeWidth="1.5"/>
+              </svg>
+              {successMsg}
+            </div>
+          )}
+
+          {error && (
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-red-950/50 border border-red-900 text-sm text-red-400">
+              <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" strokeWidth="1.5"/>
+                <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              {typeof error === "string" ? error : error?.message || "Something went wrong."}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-zinc-400 uppercase tracking-widest">Email</label>
+              <input type="email" name="email" value={form.email} onChange={onChange}
+                placeholder="you@example.com" className={inp} required />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-zinc-400 uppercase tracking-widest">Password</label>
+                <Link to="/forgot-password" className="text-xs text-zinc-500 hover:text-white transition">
+                  Forgot?
+                </Link>
+              </div>
+              <div className="relative">
+                <input type={showPass ? "text" : "password"} name="password" value={form.password}
+                  onChange={onChange} placeholder="••••••••"
+                  className={`${inp} pr-11`} required />
+                <button type="button" onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition p-1">
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading}
+              className="w-full mt-2 py-3 rounded-xl bg-white text-black text-sm font-semibold
+                hover:bg-zinc-100 active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-2">
+              {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : "Sign in"}
+            </button>
+          </form>
+        </div>
+
+        {/* Footer divider */}
+        <div className="h-px bg-zinc-900 mx-4" />
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ import Register from "./Components/Dashboard/Auth/Register.jsx";
 import Login from "./Components/Dashboard/Auth/Login.jsx";
 import AboutPage from "./Components/Dashboard/Pages/AboutPage.jsx";
 import BookACall from "./Components/Project/BookACall.jsx";
-import BookingPage from "./Components/Project/BookingPage.jsx";
+import BookingPage from "./Components/BokingPage/BookingPage.jsx";
 import AllBlog from "./Components/Dashboard/Pages/DashboardBlog/AllBlog.jsx";
 import BookCallNotify from "./Components/Dashboard/Pages/BookCallNotify.jsx";
 import Terms from "./Components/other/Terms.jsx";

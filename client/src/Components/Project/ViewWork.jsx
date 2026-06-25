@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useDispatch, useSelector } from "react-redux";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import {
   fetchProjects,
   selectProjects,
@@ -14,41 +16,41 @@ import Page404 from "../404/PageNotFound404";
 import BookACall from "./BookACall";
 
 gsap.registerPlugin(ScrollTrigger);
+
 function LoadingSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-200 animate-pulse">
-      <div className="flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20">
-        <aside className="w-full lg:w-[40vw] lg:max-w-[520px] px-4 sm:px-8 lg:px-12 py-8 lg:py-12 space-y-8">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded bg-black/10" />
-            <div className="h-5 w-40 bg-black/10 rounded" />
-          </div>
-          <div className="h-3 w-full bg-black/10 rounded" />
-          <div className="h-3 w-3/4 bg-black/10 rounded" />
-          <div className="grid grid-cols-2 gap-6 pt-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="space-y-2">
-                <div className="h-3 w-20 bg-black/10 rounded" />
-                <div className="h-3 w-28 bg-black/10 rounded" />
-              </div>
+    <SkeletonTheme baseColor="#161616" highlightColor="#262626">
+      <div className="min-h-screen bg-black">
+        <div className="flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20">
+          <aside className="w-full lg:w-[40vw] lg:max-w-[520px] px-4 sm:px-8 lg:px-12 py-8 lg:py-12 space-y-8">
+            <div className="flex items-center gap-3">
+              <Skeleton circle width={28} height={28} />
+              <Skeleton width={160} height={20} />
+            </div>
+            <Skeleton width="100%" height={12} />
+            <Skeleton width="75%" height={12} />
+            <div className="grid grid-cols-2 gap-6 pt-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton width={80} height={10} />
+                  <Skeleton width={110} height={10} />
+                </div>
+              ))}
+            </div>
+            <div className="space-y-4 pt-4">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} width="100%" height={10} />
+              ))}
+            </div>
+          </aside>
+          <main className="w-full lg:w-[70%] mx-auto flex flex-col gap-6 px-4 sm:px-6 lg:px-0 py-8">
+            {[...Array(2)].map((_, i) => (
+              <Skeleton key={i} className="w-full aspect-video" borderRadius={24} />
             ))}
-          </div>
-          <div className="space-y-4 pt-4">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-2.5 w-full bg-black/10 rounded" />
-            ))}
-          </div>
-        </aside>
-        <main className="w-full lg:w-[70%] mx-auto flex flex-col gap-6 px-4 sm:px-6 lg:px-0 py-8">
-          {[...Array(2)].map((_, i) => (
-            <div
-              key={i}
-              className="w-full rounded-3xl bg-black/10 aspect-video"
-            />
-          ))}
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </SkeletonTheme>
   );
 }
 
@@ -81,11 +83,11 @@ function TestimonialSection({ project }) {
   return (
     <section
       ref={sectionRef}
-      className="flex justify-center py-16 sm:py-24 px-4 sm:px-6 bg-gray-200 text-black border-t border-black/10"
+      className="flex justify-center py-16 sm:py-24 px-4 sm:px-6 bg-black text-white border-t border-white/10"
     >
       <div className="max-w-5xl w-full flex flex-col md:flex-row items-start gap-8 sm:gap-12">
         <div className="testi-item flex-shrink-0 w-full md:w-auto flex justify-center md:justify-start">
-          <div className="relative w-48 h-64 sm:w-56 sm:h-72 md:w-64 md:h-80 rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/10">
+          <div className="relative w-48 h-64 sm:w-56 sm:h-72 md:w-64 md:h-80 rounded-2xl overflow-hidden shadow-xl ring-1 ring-white/10">
             {testimonialImage ? (
               <img
                 src={testimonialImage}
@@ -93,8 +95,8 @@ function TestimonialSection({ project }) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-black/10 flex items-center justify-center">
-                <span className="font-JetBrainsMono text-black/30 text-xs tracking-widest uppercase">
+              <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                <span className="font-JetBrainsMono text-white/30 text-xs tracking-widest uppercase">
                   No photo
                 </span>
               </div>
@@ -109,18 +111,18 @@ function TestimonialSection({ project }) {
         </div>
         <div className="testi-item max-w-xl font-JetBrainsMono w-full">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-4 h-px bg-black/40" />
-            <p className="text-[11px] tracking-[0.3em] uppercase text-black/50 font-medium">
+            <div className="w-4 h-px bg-white/40" />
+            <p className="text-[11px] tracking-[0.3em] uppercase text-white/50 font-medium">
               Testimonial
             </p>
           </div>
-          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mb-2 select-none">
+          <div className="text-5xl sm:text-6xl text-white/15 font-serif leading-none mb-2 select-none">
             &ldquo;
           </div>
-          <blockquote className="text-[13px] sm:text-[15px] md:text-[16px] leading-relaxed text-gray-800 font-light italic">
+          <blockquote className="text-[13px] sm:text-[15px] md:text-[16px] leading-relaxed text-gray-200 font-light italic">
             {testimonial?.description}
           </blockquote>
-          <div className="text-5xl sm:text-6xl text-black/15 font-serif leading-none mt-2 text-right select-none">
+          <div className="text-5xl sm:text-6xl text-white/15 font-serif leading-none mt-2 text-right select-none">
             &rdquo;
           </div>
         </div>
@@ -158,7 +160,6 @@ function AutoplayVideo({ src, isVisible }) {
   return (
     <div
       ref={containerRef}
-     
       className="w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg"
     >
       <video
@@ -198,18 +199,17 @@ function MediaImage({ src, index }) {
   return (
     <div
       ref={imgRef}
-    
       className="w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg group"
     >
       <img
         src={src}
         alt={`Project image ${index + 1}`}
-       
-        className="w-full h-auto block object-contain bg-black/5 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+        className="w-full h-auto block object-contain bg-white/5 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
       />
     </div>
   );
 }
+
 function MobileTabBar({ activeTab, onChange }) {
   const indicatorRef = useRef(null);
   const aboutBtnRef = useRef(null);
@@ -229,18 +229,18 @@ function MobileTabBar({ activeTab, onChange }) {
   }, [activeTab]);
 
   return (
-    <div className="lg:hidden sticky top-0 z-40 bg-gray-200/95 backdrop-blur-sm border-b border-black/8 px-4 sm:px-8 py-3">
-      <div className="relative flex gap-1 bg-black/6 rounded-xl p-1 w-full max-w-xs">
+    <div className="lg:hidden sticky top-0 z-40 bg-black/95 backdrop-blur-sm border-b border-white/8 px-4 sm:px-8 py-3">
+      <div className="relative flex gap-1 bg-white/6 rounded-xl p-1 w-full max-w-xs">
         <div
           ref={indicatorRef}
-          className="absolute top-1 left-1 h-[calc(100%-8px)] bg-black rounded-lg pointer-events-none"
+          className="absolute top-1 left-1 h-[calc(100%-8px)] bg-white rounded-lg pointer-events-none"
           style={{ width: "50%" }}
         />
         <button
           ref={aboutBtnRef}
           onClick={() => onChange("about")}
           className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300 ${
-            activeTab === "about" ? "text-white" : "text-black/50"
+            activeTab === "about" ? "text-black" : "text-white/50"
           }`}
         >
           <svg
@@ -260,7 +260,7 @@ function MobileTabBar({ activeTab, onChange }) {
           ref={mediaBtnRef}
           onClick={() => onChange("media")}
           className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[11px] font-medium tracking-[0.15em] uppercase transition-colors duration-300 ${
-            activeTab === "media" ? "text-white" : "text-black/50"
+            activeTab === "media" ? "text-black" : "text-white/50"
           }`}
         >
           <svg
@@ -280,6 +280,7 @@ function MobileTabBar({ activeTab, onChange }) {
     </div>
   );
 }
+
 function AboutContent({ project, headerRef, metaRef, detailRef }) {
   return (
     <div className="flex flex-col gap-8 lg:gap-10 w-full">
@@ -292,26 +293,26 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
               className="w-7 h-7 rounded object-cover"
             />
           ) : (
-            <div className="w-6 h-6 lg:w-7 lg:h-7 rounded bg-black" />
+            <div className="w-6 h-6 lg:w-7 lg:h-7 rounded bg-white" />
           )}
           <h1 className="text-xl sm:text-2xl lg:text-xl font-semibold tracking-tight leading-tight">
             {project.title}
           </h1>
         </div>
-        <p className="text-sm text-black/55 leading-relaxed">
+        <p className="text-sm text-white/55 leading-relaxed">
           {project.description}
         </p>
       </div>
 
       <div ref={metaRef} className="grid grid-cols-2 gap-y-7 gap-x-6 text-sm">
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
             Industry
           </p>
           <p className="text-sm font-medium">{project.industry}</p>
         </div>
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
             Published
           </p>
           <p className="text-sm font-medium">
@@ -319,14 +320,14 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
           </p>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-1.5">
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
             Live Site
           </p>
           <a
             href={project.liveLink || project.site}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-black hover:text-black/60 transition-colors duration-300 group"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-white/60 transition-colors duration-300 group"
           >
             <span className="group-hover:underline underline-offset-4">
               {(project.liveLink || project.site)
@@ -352,16 +353,16 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
           </a>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-black/40 mb-3">
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-3">
             Deliverables
           </p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
             {(project.deliverables ?? []).map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-black/60"
+                className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-white/60"
               >
-                <span className="w-1 h-1 rounded-full bg-black/35 flex-shrink-0" />
+                <span className="w-1 h-1 rounded-full bg-white/35 flex-shrink-0" />
                 {item}
               </li>
             ))}
@@ -369,39 +370,39 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
         </div>
       </div>
 
-      <div className="w-full h-px bg-black/10" />
+      <div className="w-full h-px bg-white/10" />
 
       <div ref={detailRef} className="space-y-7">
         {(project.problemStatement ?? project.problem) && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">
               Problem
             </h3>
-            <p className="text-[13px] leading-relaxed text-black/65">
+            <p className="text-[13px] leading-relaxed text-white/65">
               {project.problemStatement ?? project.problem}
             </p>
           </div>
         )}
         {project.solution && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40">
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">
               Solution
             </h3>
-            <p className="text-[13px] leading-relaxed text-black/65">
+            <p className="text-[13px] leading-relaxed text-white/65">
               {project.solution}
             </p>
           </div>
         )}
         {project.techStack?.length > 0 && (
           <div>
-            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-black/40 mb-3">
+            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40 mb-3">
               Tech Stack
             </p>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1.5 rounded-full border border-black/15 text-[10px] tracking-wider uppercase text-black/60 hover:bg-black hover:text-white transition-all duration-200 cursor-default"
+                  className="px-3 py-1.5 rounded-full border border-white/15 text-[10px] tracking-wider uppercase text-white/60 hover:bg-white hover:text-black transition-all duration-200 cursor-default"
                 >
                   {tech}
                 </span>
@@ -428,7 +429,7 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
   if (!hasMedia) {
     return (
       <div className="w-full flex items-center justify-center py-24">
-        <p className="font-JetBrainsMono text-black/30 tracking-widest uppercase text-sm">
+        <p className="font-JetBrainsMono text-white/30 tracking-widest uppercase text-sm">
           No media available
         </p>
       </div>
@@ -436,7 +437,6 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
   }
 
   return (
-   
     <div
       ref={mediaRef}
       className="flex flex-col gap-5 sm:gap-6 w-full pb-8 lg:pb-12 pt-2 lg:pt-6"
@@ -450,11 +450,11 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
       {videoSrc && (
         <>
           <div className="media-item w-full flex items-center gap-3 px-1 mt-3">
-            <div className="flex-1 h-px bg-black/10" />
-            <span className="text-[10px] tracking-[0.3em] uppercase text-black/30 font-medium whitespace-nowrap">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-[10px] tracking-[0.3em] uppercase text-white/30 font-medium whitespace-nowrap">
               Project Video
             </span>
-            <div className="flex-1 h-px bg-black/10" />
+            <div className="flex-1 h-px bg-white/10" />
           </div>
           <div className="media-item">
             <AutoplayVideo src={videoSrc} isVisible={isVisible} />
@@ -464,6 +464,7 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
     </div>
   );
 }
+
 function ViewWork() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -479,6 +480,7 @@ function ViewWork() {
   useEffect(() => {
     if (projects.length === 0) dispatch(fetchProjects());
   }, [dispatch, projects.length]);
+
   useEffect(() => {
     if (loading) return;
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -504,6 +506,7 @@ function ViewWork() {
         0.35
       );
   }, [loading]);
+
   useEffect(() => {
     if (activeTab !== "about" || !aboutPanelRef.current) return;
     gsap.fromTo(
@@ -531,7 +534,7 @@ function ViewWork() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-200 text-black font-JetBrainsMono">
+      <div className="min-h-screen bg-black text-white font-JetBrainsMono">
         <MobileTabBar activeTab={activeTab} onChange={setActiveTab} />
         <div className="flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20">
           <aside

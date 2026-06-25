@@ -91,9 +91,9 @@ function ServiceSection() {
       <div className="min-h-screen text-white overflow-x-hidden">
         {/* Hero */}
         <div className="relative flex flex-col items-center justify-center text-center h-[65vh] sm:h-[60vh] px-4 overflow-hidden">
-          <h1 className="text-[20vw] md:text-[12vw] font-extrabold leading-none">
-            services
-          </h1>
+      <h1 className="font-JetBrainsMono font-extrabold tracking-tight text-[20vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none">
+  services
+</h1>
           <p className="mt-6 max-w-3xl text-white/70">
             We're not just storytellers — we craft digital experiences that push
             brands forward through strategy, design, and innovation.

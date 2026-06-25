@@ -157,9 +157,9 @@ const ProjectSection = () => {
 
       {/* ── Hero ── */}
       <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-[20vw] md:text-[12vw] font-extrabold leading-none font-JetBrainsMono">
-          work
-        </h1>
+       <h1 className="font-JetBrainsMono font-extrabold tracking-tight text-[20vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none">
+  work
+</h1>
         <p className="mt-6 max-w-3xl text-white/70 font-JetBrainsMono">
           Every piece of work we create carries intention, impact, and imagination.
         </p>

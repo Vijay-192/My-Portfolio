@@ -84,13 +84,9 @@ function AboutSection() {
   return (
     <section id="about" className="w-full bg-black text-white overflow-hidden">
       <div className="h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[50vh] flex items-center justify-center">
-        <h1
-          className="font-JetBrainsMono font-extrabold tracking-tight
-            text-[20vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw]
-            leading-none"
-        >
-          about
-        </h1>
+        <h1 className="font-JetBrainsMono font-extrabold tracking-tight text-[20vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none">
+  about
+</h1>
       </div>
 
       {/* ── Main content ── */}
@@ -110,7 +106,7 @@ function AboutSection() {
               font-semibold leading-tight
             "
           >
-            Hi <HandsIcon size={42} /> I'm Vijay
+            Hi <HandsIcon size={42} /> I'm Vijay Saini
             <br />I like building web applications.
           </h1>
 

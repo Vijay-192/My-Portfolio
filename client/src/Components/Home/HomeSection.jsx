@@ -106,6 +106,7 @@ function HomeSection() {
     -translate-x-[23vw]
 
     /* Desktop reset */
+    ml-45
     sm:static
     sm:translate-x-0
   "
@@ -241,6 +242,7 @@ function HomeSection() {
     font-JetBrainsMono
     -translate-y-[300%]
     sm:translate-y-0
+    
   "
           >
             <div>Local time</div>
@@ -257,6 +259,7 @@ function HomeSection() {
     translate-x-[10px]
     sm:translate-x-0
     sm:translate-y-0
+    ml-35
   "
           >
             <ul className="flex flex-row gap-2 text-[11px] sm:text-xs text-gray-400 font-JetBrainsMono">

@@ -7,6 +7,39 @@ import {
 } from "../../redux-store/Projectslice";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+function CarouselSkeleton() {
+  return (
+    <SkeletonTheme baseColor="#161616" highlightColor="#262626">
+      <section className="overflow-hidden bg-black text-white py-12 border-t border-white/10">
+        {/* Header */}
+        <div className="flex items-center justify-between px-8 sm:px-14 mb-10">
+          <div className="flex items-center gap-4">
+            <div className="w-4 h-px bg-white/30" />
+            <p className="font-JetBrainsMono text-[11px] tracking-[0.3em] uppercase text-white/40 font-medium">
+              Next Projects
+            </p>
+          </div>
+        </div>
+
+        {/* Cards row */}
+        <div className="flex justify-center">
+          <div className="relative w-[92%] overflow-hidden">
+            <div className="flex gap-5">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="min-w-[380px] max-w-[380px] h-[420px]">
+                  <Skeleton height="100%" width="100%" borderRadius={16} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </SkeletonTheme>
+  );
+}
 
 function NextProjectCarousel() {
   const { id } = useParams();
@@ -59,7 +92,8 @@ function NextProjectCarousel() {
     });
   }, [scrollX, duration, isPaused]);
 
-  if (loading || currentIndex === -1) return null;
+  if (loading) return <CarouselSkeleton />;
+  if (currentIndex === -1) return null;
 
   const nextProjects = [
     ...projects.slice(currentIndex + 1),
@@ -78,12 +112,12 @@ function NextProjectCarousel() {
         : project.tags ?? [];
 
   return (
-    <section className="overflow-hidden bg-gray-200 text-black py-12 border-t border-black/10">
+    <section className="overflow-hidden bg-black text-white py-12 border-t border-white/10">
       {/* Header */}
       <div className="flex items-center justify-between px-8 sm:px-14 mb-10">
         <div className="flex items-center gap-4">
-          <div className="w-4 h-px bg-black/30" />
-          <p className="font-JetBrainsMono text-[11px] tracking-[0.3em] uppercase text-black/40 font-medium">
+          <div className="w-4 h-px bg-white/30" />
+          <p className="font-JetBrainsMono text-[11px] tracking-[0.3em] uppercase text-white/40 font-medium">
             Next Projects
           </p>
         </div>
@@ -92,8 +126,8 @@ function NextProjectCarousel() {
           <button
             onClick={() => setIsPaused((p) => !p)}
             className="font-JetBrainsMono text-[10px] tracking-[0.2em] uppercase
-                       border border-black/15 rounded-full px-4 py-1.5
-                       text-black/40 hover:text-black hover:border-black/40
+                       border border-white/15 rounded-full px-4 py-1.5
+                       text-white/40 hover:text-white hover:border-white/40
                        transition-all duration-200"
           >
             {isPaused ? "Play" : "Pause"}
@@ -122,7 +156,7 @@ function NextProjectCarousel() {
                   projectId={projectId}
                   imageUrl={imageUrl}
                   tags={tags}
-                  onNavigate={() => navigate(`/view-work/${projectId}`)}
+                  navigate={navigate}
                 />
               );
             })}
@@ -133,27 +167,32 @@ function NextProjectCarousel() {
   );
 }
 
-function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
+function ProjectCard({ project, projectId, imageUrl, tags, navigate }) {
   const [hovered, setHovered] = useState(false);
+
+  const goToProject = () => {
+    if (!projectId) return;
+    navigate(`/view-work/${projectId}`);
+  };
 
   return (
     <div
-      onClick={onNavigate}
+      onClick={goToProject}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="
         min-w-[380px] max-w-[380px]
         rounded-2xl overflow-hidden
-        bg-white/40 border border-black/8
+        bg-white/5 border border-white/8
         cursor-pointer
         transition-all duration-300
-        hover:shadow-xl hover:shadow-black/10
+        hover:shadow-xl hover:shadow-white/10
         hover:-translate-y-1
         select-none
       "
     >
       {/* IMAGE */}
-      <div className="relative h-[240px] overflow-hidden bg-black/5">
+      <div className="relative h-[240px] overflow-hidden bg-white/5">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -166,7 +205,7 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="font-JetBrainsMono text-black/20 text-xs tracking-widest uppercase">
+            <span className="font-JetBrainsMono text-white/20 text-xs tracking-widest uppercase">
               No image
             </span>
           </div>
@@ -175,16 +214,17 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
         {/* Hover overlay */}
         <div
           className={`
-            absolute inset-0 bg-black/50
+            absolute inset-0 bg-black/60
             flex items-center justify-center
             transition-opacity duration-300
             ${hovered ? "opacity-100" : "opacity-0"}
           `}
         >
-          <div
+          <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
-              window.open(`/view-work/${projectId}`, "_blank");
+              goToProject();
             }}
             className="
               w-20 h-20 rounded-full
@@ -192,13 +232,13 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
               flex flex-col items-center justify-center gap-0.5
               font-JetBrainsMono text-[9px] tracking-[0.2em] uppercase
               shadow-lg
-              hover:bg-gray-100 transition-colors
+              hover:bg-gray-200 transition-colors
               cursor-pointer
             "
           >
             <span className="text-base leading-none">↗</span>
             <span>View</span>
-          </div>
+          </button>
         </div>
 
         {/* Category badge */}
@@ -206,8 +246,8 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
           <div className="absolute top-3 left-3">
             <span className="
               font-JetBrainsMono text-[9px] tracking-[0.2em] uppercase
-              bg-white/90 text-black/70 rounded-full px-3 py-1
-              border border-black/10
+              bg-black/80 text-white/80 rounded-full px-3 py-1
+              border border-white/10
             ">
               {project.category}
             </span>
@@ -219,7 +259,7 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
           <div className="absolute top-3 right-3">
             <span className="
               font-JetBrainsMono text-[9px] tracking-[0.2em]
-              bg-black/70 text-white/80 rounded-full px-3 py-1
+              bg-white/90 text-black/80 rounded-full px-3 py-1
             ">
               {project.publishYear ?? project.year}
             </span>
@@ -231,14 +271,14 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
       <div className="px-5 py-4 space-y-3">
         {/* Title + arrow */}
         <div className="flex items-start justify-between gap-3">
-          <h2 className="font-JetBrainsMono font-semibold text-[15px] leading-snug text-black">
+          <h2 className="font-JetBrainsMono font-semibold text-[15px] leading-snug text-white">
             {project.title}
           </h2>
           <span
             className={`
-              text-black/30 text-lg leading-none flex-shrink-0 mt-0.5
+              text-white/30 text-lg leading-none flex-shrink-0 mt-0.5
               transition-all duration-300
-              ${hovered ? "text-black translate-x-0.5 -translate-y-0.5" : ""}
+              ${hovered ? "text-white translate-x-0.5 -translate-y-0.5" : ""}
             `}
           >
             ↗
@@ -247,13 +287,13 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
 
         {/* Description — 2 lines max */}
         {project.description && (
-          <p className="font-JetBrainsMono text-[11px] leading-relaxed text-black/45 line-clamp-2">
+          <p className="font-JetBrainsMono text-[11px] leading-relaxed text-white/45 line-clamp-2">
             {project.description}
           </p>
         )}
 
         {/* Divider */}
-        <div className="w-full h-px bg-black/8" />
+        <div className="w-full h-px bg-white/8" />
 
         {/* Tech / Deliverable Tags */}
         {tags.length > 0 && (
@@ -264,11 +304,11 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
                 className="
                   font-JetBrainsMono
                   text-[9px] tracking-[0.15em] uppercase
-                  border border-black/12 rounded-full
+                  border border-white/12 rounded-full
                   px-2.5 py-1
-                  text-black/50
-                  bg-black/3
-                  hover:bg-black hover:text-white hover:border-black
+                  text-white/50
+                  bg-white/3
+                  hover:bg-white hover:text-black hover:border-white
                   transition-all duration-200
                 "
               >
@@ -278,8 +318,8 @@ function ProjectCard({ project, projectId, imageUrl, tags, onNavigate }) {
             {tags.length > 4 && (
               <span className="
                 font-JetBrainsMono text-[9px] tracking-[0.15em] uppercase
-                border border-black/12 rounded-full px-2.5 py-1
-                text-black/30
+                border border-white/12 rounded-full px-2.5 py-1
+                text-white/30
               ">
                 +{tags.length - 4}
               </span>

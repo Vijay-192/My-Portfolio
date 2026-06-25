@@ -38,20 +38,21 @@ const Education = () => {
 
   return (
     <div className="bg-black min-h-auto p-4 sm:p-6 md:p-10 flex justify-center items-start font-JetBrainsMono">
-      <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[73%] space-y-6">
+      <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[79%] space-y-6">
         <h1
           className="
             text-white/50 tracking-tight
             text-4xl sm:text-5xl md:text-6xl
-            px-20 sm:px-8 md:px-26 lg:px-44 xl:px-57
+            px-20 sm:px-8 md:px-26 lg:px-40 xl:px-67
             -translate-x-[18%] sm:-translate-x-[22%]
-            relative
+            relative mb-10
           "
         >
           education
         </h1>
         {sections.map((section, index) => (
           <div key={index} className="mb-2">
+            
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
               className="group relative flex items-center justify-between w-full text-lg sm:text-xl md:text-2xl font-semibold px-4 py-3"
@@ -59,7 +60,7 @@ const Education = () => {
               <span className="text-white">{section.title}</span>
               <ArrowUpRight
                 size={22}
-                className={`text-white duration-500 ${
+                className={`text-white duration-500  ${
                   openIndex === index ? "rotate-45" : ""
                 }`}
               />
@@ -81,7 +82,7 @@ const Education = () => {
                     education.map((item) => (
                       <div
                         key={item._id}
-                        className="p-4 sm:p-6 md:p-6 bg-gray-900 rounded-lg flex flex-col md:flex-row gap-4 md:gap-8 mb-4"
+                        className="p-4 sm:p-6 md:p-6 bg-black border border-white/10 rounded-lg flex flex-col md:flex-row gap-4 md:gap-8 mb-4"
                       >
                         <div className="w-full md:w-[35%]">
                           {sliderImages.length > 0 && (
@@ -96,17 +97,17 @@ const Education = () => {
                         </div>
                         <div className="flex-1 text-white space-y-1 sm:space-y-2">
                           {/* Course name as heading */}
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
                             {item.courseName}
                             {item.branch && ` — ${item.branch}`}
                           </h3>
                           {item.educationType === "college" && (
                             <>
-                              <p className="opacity-80 text-sm sm:text-base">
+                              <p className="opacity-80 text-sm sm:text-base text-white">
                                 🏫 {item.instituteName}
                               </p>
                               {item.universityName && (
-                                <p className="opacity-80 text-sm sm:text-base">
+                                <p className="opacity-80 text-sm sm:text-base text-white">
                                   🎓 {item.universityName}
                                 </p>
                               )}
@@ -116,16 +117,16 @@ const Education = () => {
                           {/* School fields */}
                           {item.educationType === "school" && (
                             <>
-                              <p className="opacity-80 text-sm sm:text-base">
+                              <p className="opacity-80 text-sm sm:text-base text-white">
                                 🏫 {item.instituteName}
                               </p>
                               {item.board && (
-                                <p className="opacity-80 text-sm sm:text-base">
+                                <p className="opacity-80 text-sm sm:text-base text-white">
                                   📋 Board: {item.board}
                                 </p>
                               )}
                               {item.stream && (
-                                <p className="opacity-80 text-sm sm:text-base">
+                                <p className="opacity-80 text-sm sm:text-base text-white">
                                   📚 Stream: {item.stream}
                                 </p>
                               )}
@@ -133,18 +134,18 @@ const Education = () => {
                           )}
 
                           {/* Common fields */}
-                          <p className="opacity-80 text-sm sm:text-base">
+                          <p className="opacity-80 text-sm sm:text-base text-white">
                             📅 {item.session}
                           </p>
 
                           {item.cgpa && (
-                            <p className="opacity-80 text-sm sm:text-base">
+                            <p className="opacity-80 text-sm sm:text-base text-white">
                               🎯 CGPA: {item.cgpa}
                             </p>
                           )}
 
                           {item.percentage && (
-                            <p className="opacity-80 text-sm sm:text-base">
+                            <p className="opacity-80 text-sm sm:text-base text-white">
                               🎯 Percentage: {item.percentage}
                             </p>
                           )}
@@ -163,7 +164,7 @@ const Education = () => {
                     achievements.map((ach) => (
                       <div
                         key={ach._id}
-                        className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5 flex flex-col md:flex-row gap-3 sm:gap-5 hover:border-gray-600 duration-300"
+                        className="bg-black border border-white/10 rounded-xl p-4 sm:p-5 flex flex-col md:flex-row gap-3 sm:gap-5 hover:border-white/40 duration-300"
                       >
                         <div className="w-full md:w-[35%]">
                           {ach.images?.[0] && (
@@ -175,17 +176,17 @@ const Education = () => {
                           )}
                         </div>
                         <div className="flex-1 text-white space-y-1 sm:space-y-2">
-                          <h4 className="text-md sm:text-lg md:text-lg font-semibold text-blue-300">
+                          <h4 className="text-md sm:text-lg md:text-lg font-semibold text-white">
                             {ach.title}
                           </h4>
 
-                          <div className="grid grid-cols-2 gap-1 sm:gap-2 text-xs sm:text-sm opacity-80 mt-1">
+                          <div className="grid grid-cols-2 gap-1 sm:gap-2 text-xs sm:text-sm opacity-80 mt-1 text-white">
                             <p>📅 Year: {ach.year}</p>
                             <p>📌 Category: {ach.category}</p>
                           </div>
 
                           {ach.description && (
-                            <p className="opacity-90 text-xs sm:text-sm mt-2">
+                            <p className="opacity-90 text-xs sm:text-sm mt-2 text-white">
                               {ach.description}
                             </p>
                           )}
@@ -194,7 +195,7 @@ const Education = () => {
                               {ach.tags.map((tag, t) => (
                                 <span
                                   key={t}
-                                  className="text-xs sm:text-sm bg-gray-800 px-2 sm:px-3 py-1 rounded-full border border-gray-700"
+                                  className="text-xs sm:text-sm bg-black px-2 sm:px-3 py-1 rounded-full border border-white/20 text-white"
                                 >
                                   {tag}
                                 </span>
