@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400&family=DM+Sans:wght@300;400&display=swap');
+
+:root {
+
+  --ld-bg:          #050508;
+  --ld-gold:        #b8905a;
+  --ld-gold-ring:   rgba(184, 144, 90, 0.16);
+  --ld-gold-tick:   rgba(184, 144, 90, 0.55);
+  --ld-gold-line:   rgba(184, 144, 90, 0.30);
+
+  /* white alpha scale */
+  --ld-w60:  rgba(255,255,255,0.60);
+  --ld-w32:  rgba(255,255,255,0.32);
+  --ld-w18:  rgba(255,255,255,0.18);
+  --ld-w08:  rgba(255,255,255,0.08);
+  --ld-w04:  rgba(255,255,255,0.04);
+  --ld-w02:  rgba(255,255,255,0.02);
+
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-data:    'DM Mono', 'Courier New', monospace;
+  --font-ui:      'DM Sans', system-ui, sans-serif;
+
+
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-in-quart:  cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@keyframes ld-ring-cw  { to { transform: rotate( 360deg); } }
+@keyframes ld-ring-ccw { to { transform: rotate(-360deg); } }
+
+@keyframes ld-core-pulse {
+  0%,100% { opacity: 1;    transform: scale(1);    }
+  50%      { opacity: 0.25; transform: scale(0.50); }
+}
+
+@keyframes ld-shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(500%);  }
+}
+
+@keyframes ld-scan {
+  0%   { top:  -1px; opacity: 0;   }
+  6%   {              opacity: 0.5; }
+  93%  {              opacity: 0.2; }
+  100% { top: 100%;  opacity: 0;   }
+}
+
+@keyframes ld-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes ld-flicker {
+  0%,93%,100% { opacity: 1;   }
+  95%          { opacity: 0.1; }
+}
+
+
+.ld-root {
+  background-color: var(--ld-bg);
+  font-family:      var(--font-ui);
+}
+
+.ld-vignette {
+  background: radial-gradient(
+    ellipse 90% 90% at 50% 50%,
+    transparent 28%,
+    rgba(5, 5, 8, 0.82) 100%
+  );
+}
+
+.ld-h-rule {
+  left:   0; right:  0;
+  height: 1px;
+  background: var(--ld-w02);
+  animation:  ld-flicker 10s ease-in-out infinite;
+}
+
+.ld-v-rule {
+  top: 0; bottom: 0;
+  width:      1px;
+  background: var(--ld-w02);
+}
+
+.ld-scan {
+  left: 0; right: 0;
+  height:     1px;
+  background: linear-gradient(
+    90deg,
+    transparent       0%,
+    var(--ld-gold-line) 50%,
+    transparent       100%
+  );
+  animation: ld-scan 8s linear infinite;
+}
+
+
+.ld-corner    { width: 10px; height: 10px; }
+.ld-corner-tl { top:14px;    left:14px;  border-top:    1px solid var(--ld-gold-line); border-left:  1px solid var(--ld-gold-line); }
+.ld-corner-tr { top:14px;    right:14px; border-top:    1px solid var(--ld-gold-line); border-right: 1px solid var(--ld-gold-line); }
+.ld-corner-bl { bottom:14px; left:14px;  border-bottom: 1px solid var(--ld-gold-line); border-left:  1px solid var(--ld-gold-line); }
+.ld-corner-br { bottom:14px; right:14px; border-bottom: 1px solid var(--ld-gold-line); border-right: 1px solid var(--ld-gold-line); }
+
+
+.ld-header { animation: ld-enter 0.9s var(--ease-out-expo) 0.15s both; }
+.ld-footer { animation: ld-enter 0.9s var(--ease-out-expo) 0.30s both; }
+
+
+.ld-mono {
+  font-family:          var(--font-data);
+  font-weight:          300;
+  font-size:            9px;
+  letter-spacing:       0.22em;
+  font-variant-numeric: tabular-nums;
+  color:                var(--ld-w32);
+}
+
+.ld-label {
+  font-family:    var(--font-ui);
+  font-weight:    300;
+  font-size:      8px;
+  letter-spacing: 0.40em;
+  text-transform: uppercase;
+  color:          var(--ld-w32);
+}
+
+.ld-tagline {
+  font-family:    var(--font-display);
+  font-style:     italic;
+  font-weight:    300;
+  font-size:      14px;
+  letter-spacing: 0.26em;
+  color:          var(--ld-w32);
+  transition:     opacity  0.35s var(--ease-out-expo),
+                  transform 0.35s var(--ease-out-expo);
+}
+
+.ld-ghost-pct {
+  font-family:    var(--font-data);
+  font-weight:    400;
+  line-height:    1;
+  letter-spacing: -0.05em;
+  color:          rgba(255,255,255,0.028);
+  user-select:    none;
+  pointer-events: none;
+}
+
+.ld-sidebars {
+  gap:       5px;
+  animation: ld-enter 1s ease 0.85s both;
+}
+
+.ld-bar {
+  height:     1px;
+  background: linear-gradient(90deg, var(--ld-gold) 0%, transparent 100%);
+  transition: width   0.22s var(--ease-out-expo),
+              opacity 0.22s ease;
+}
+
+.ld-ring-outer { transform-origin: 70px 70px; animation: ld-ring-cw  24s linear infinite; }
+.ld-ring-inner { transform-origin: 70px 70px; animation: ld-ring-ccw 15s linear infinite; }
+.ld-core-dot   { animation: ld-core-pulse 2.8s ease-in-out infinite; }
+
+.ld-gold-line {
+  height:     1px;
+  background: var(--ld-gold);
+  opacity:    0.32;
+  transition: width 0.22s var(--ease-out-expo);
+}
+.ld-track {
+  width:    100%;
+  height:   1px;
+  background: var(--ld-w08);
+  position:   relative;
+  overflow:   hidden;
+}
+
+.ld-fill {
+  position:   absolute;
+  top: 0; bottom: 0; left: 0;
+  background: rgba(255,255,255,0.90);
+  transition: width 0.18s linear;
+}
+
+.ld-shimmer {
+  position: absolute;
+  top: 0; bottom: 0;
+  width:      20%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.60),
+    transparent
+  );
+  animation: ld-shimmer 2.2s var(--ease-in-quart) infinite;
+}
+.ld-phase {
+  display:        flex;
+  align-items:    center;
+  gap:            6px;
+  font-family:    var(--font-data);
+  font-weight:    300;
+  font-size:      8px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color:          var(--ld-w08);
+  transition:     color 0.4s ease;
+}
+
+.ld-phase.is-active { color: var(--ld-w60); }
+.ld-phase.is-done   { color: var(--ld-w08); }
+
+.ld-phase-pip {
+  width:         3px;
+  height:        3px;
+  border-radius: 50%;
+  flex-shrink:   0;
+  background:    currentColor;
+  transition:    background 0.4s ease;
+}
+
+.ld-phase.is-active .ld-phase-pip {
+  background: var(--ld-gold);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ld-h-rule,
+  .ld-scan,
+  .ld-ring-outer,
+  .ld-ring-inner,
+  .ld-core-dot,
+  .ld-shimmer,
+  .ld-header,
+  .ld-footer,
+  .ld-sidebars {
+    animation: none;
+  }
+
+  .ld-tagline,
+  .ld-bar,
+  .ld-gold-line,
+  .ld-fill,
+  .ld-phase,
+  .ld-phase-pip {
+    transition: none;
+  }
+}

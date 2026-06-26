@@ -18,15 +18,22 @@ const externalLinks = [
   { name: "LinkedIn",  url: "https://www.linkedin.com/in/vijay-saini-51310a238/" },
   { name: "GitHub",    url: "https://github.com/Vijay-192" },
 ];
-
 const internalLinks = [
   { name: "Admin Panel", url: "/dashboard" },
-  { name: "Projects",    url: "/work" },
+  { name: "Work",        url: "/work" },
   { name: "About",       url: "/about" },
+  { name: "Services",    url: "/services" },
+  { name: "Blogs",       url: "/blog" },
+  { name: "Skills",      url: "/skills" },
+  { name: "Contact",     url: "/contact" },
 ];
 
 const handleDownload = (id, type) => {
   window.open(`${API}/${type}/${id}/download`, "_blank");
+};
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "instant" });
 };
 
 function Footer() {
@@ -46,7 +53,10 @@ function Footer() {
   const isLoading    = resumeState.loading || cvState.loading;
 
   return (
-    <footer className="bg-black text-white px-6 md:px-16 py-16 md:py-24 font-JetBrainsMono">
+    <footer
+      style={{ "--mobile-nav-h": "72px" }}
+      className="bg-black text-white px-6 md:px-16 pt-16 md:pt-24 pb-[calc(var(--mobile-nav-h)+env(safe-area-inset-bottom)+1.5rem)] md:pb-16 font-JetBrainsMono"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 pb-12 border-b border-gray-800">
 
@@ -57,6 +67,7 @@ function Footer() {
             <div className="max-w-md">
               <Link
                 to="/book-discovery-call"
+                onClick={scrollToTop}
                 className="group inline-flex items-center gap-2 text-sm text-gray-300 border border-gray-700 rounded-full px-6 py-3 hover:border-gray-400 hover:text-white transition-colors"
               >
                 <span>Book a Discovery Call</span>
@@ -65,9 +76,8 @@ function Footer() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 grid grid-cols-3 gap-8 sm:gap-10">
+          <div className="lg:col-span-5 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-10 sm:gap-10">
 
-            {/* Navigation */}
             <div>
               <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-4">Navigation</h3>
               <ul className="flex flex-col gap-3">
@@ -75,6 +85,7 @@ function Footer() {
                   <li key={item.name}>
                     <Link
                       to={item.url}
+                      onClick={scrollToTop}
                       className="group flex items-center gap-2 text-sm text-gray-300 transition-colors hover:text-white"
                     >
                       <span>{item.name}</span>
@@ -85,7 +96,6 @@ function Footer() {
               </ul>
             </div>
 
-            {/* Connect */}
             <div>
               <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-4">Connect</h3>
               <ul className="flex flex-col gap-3">
@@ -105,17 +115,16 @@ function Footer() {
               </ul>
             </div>
 
-            {/* Resume / CV */}
-            <div>
+            <div className="col-span-2 sm:col-span-1">
               <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-4">Resume / CV</h3>
 
               {isLoading ? (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-row sm:flex-col gap-3">
                   <div className="h-4 w-16 bg-white/10 animate-pulse rounded" />
                   <div className="h-4 w-10 bg-white/10 animate-pulse rounded" />
                 </div>
               ) : (
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-row sm:flex-col gap-6 sm:gap-3">
                   <li>
                     {activeResume ? (
                       <button
@@ -149,11 +158,11 @@ function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs text-gray-500">
+        <div className="pt-8 flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center gap-x-4 gap-y-3 text-xs text-gray-500">
           <p>© {new Date().getFullYear()} Vijay Saini. All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
-            <Link to="/terms-of-use" className="hover:text-gray-300 transition-colors">Terms</Link>
+          <div className="flex gap-8">
+            <Link to="/privacy-policy" onClick={scrollToTop} className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-use" onClick={scrollToTop} className="hover:text-gray-300 transition-colors">Terms</Link>
           </div>
         </div>
       </div>

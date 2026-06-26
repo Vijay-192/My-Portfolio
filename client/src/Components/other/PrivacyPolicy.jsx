@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 function PrivacyPolicy() {
+ 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, []);
+
   return (
     <main className="bg-black text-white min-h-screen px-6 md:px-16 py-24 font-JetBrainsMono">
       <div className="max-w-3xl mx-auto">
@@ -85,7 +91,6 @@ function PrivacyPolicy() {
 
         </div>
 
-        {/* Footer note */}
         <div className="mt-20 pt-8 border-t border-gray-800 text-xs text-gray-600">
           <p>© {new Date().getFullYear()} Vijay Saini. All rights reserved.</p>
         </div>

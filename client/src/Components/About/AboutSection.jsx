@@ -168,6 +168,7 @@ function AboutSection() {
               Say Hi
             </motion.button>
           </div>
+          
         </div>
 
         {/* ── RIGHT — Images ── */}

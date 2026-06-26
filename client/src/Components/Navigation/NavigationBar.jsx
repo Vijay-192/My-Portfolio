@@ -9,6 +9,7 @@ import {
   HiBriefcase,
   HiDocumentText,
 } from "react-icons/hi";
+import { Contact } from "lucide-react";
 
 const navItems = [
   { name: "Home", icon: HiHome, path: "/", sectionId: "home" },
