@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,6 @@ import {
   selectProjects,
   selectProjectLoading,
 } from "../../redux-store/Projectslice";
-// view img 
 import NextProjectCarousel from "./NextProjectCarousel";
 import Page404 from "../404/PageNotFound404";
 import BookACall from "./BookACall";
@@ -23,6 +22,8 @@ function LoadingSkeleton() {
       <div className="min-h-screen bg-black">
         <div className="flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20">
           <aside className="w-full lg:w-[40vw] lg:max-w-[520px] px-4 sm:px-8 lg:px-12 py-8 lg:py-12 space-y-8">
+            {/* Back btn skeleton */}
+            <Skeleton width={60} height={12} borderRadius={4} />
             <div className="flex items-center gap-3">
               <Skeleton circle width={28} height={28} />
               <Skeleton width={160} height={20} />
@@ -102,9 +103,7 @@ function TestimonialSection({ project }) {
               </div>
             )}
             <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-4">
-              <p className="font-semibold text-sm leading-tight">
-                {testimonial?.name}
-              </p>
+              <p className="font-semibold text-sm leading-tight">{testimonial?.name}</p>
               <p className="text-xs opacity-75 mt-0.5">{testimonial?.post}</p>
             </div>
           </div>
@@ -243,14 +242,7 @@ function MobileTabBar({ activeTab, onChange }) {
             activeTab === "about" ? "text-black" : "text-white/50"
           }`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-3.5 h-3.5"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
           </svg>
@@ -263,14 +255,7 @@ function MobileTabBar({ activeTab, onChange }) {
             activeTab === "media" ? "text-black" : "text-white/50"
           }`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-3.5 h-3.5"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <path d="M3 9h18M9 21V9" strokeLinecap="round" />
           </svg>
@@ -287,11 +272,7 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
       <div ref={headerRef} className="space-y-3">
         <div className="flex items-center gap-3">
           {project.projectIcon ? (
-            <img
-              src={project.projectIcon}
-              alt="icon"
-              className="w-7 h-7 rounded object-cover"
-            />
+            <img src={project.projectIcon} alt="icon" className="w-7 h-7 rounded object-cover" />
           ) : (
             <div className="w-6 h-6 lg:w-7 lg:h-7 rounded bg-white" />
           )}
@@ -299,30 +280,20 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
             {project.title}
           </h1>
         </div>
-        <p className="text-sm text-white/55 leading-relaxed">
-          {project.description}
-        </p>
+        <p className="text-sm text-white/55 leading-relaxed">{project.description}</p>
       </div>
 
       <div ref={metaRef} className="grid grid-cols-2 gap-y-7 gap-x-6 text-sm">
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
-            Industry
-          </p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Industry</p>
           <p className="text-sm font-medium">{project.industry}</p>
         </div>
         <div>
-          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
-            Published
-          </p>
-          <p className="text-sm font-medium">
-            © {project.publishYear ?? project.year}
-          </p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Published</p>
+          <p className="text-sm font-medium">© {project.publishYear ?? project.year}</p>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">
-            Live Site
-          </p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Live Site</p>
           <a
             href={project.liveLink || project.site}
             target="_blank"
@@ -335,33 +306,17 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
                 .replace("http://", "")
                 .replace("www.", "")}
             </span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="w-3.5 h-3.5 flex-shrink-0"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-shrink-0">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7" />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7 7h10v10"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h10v10" />
             </svg>
           </a>
         </div>
         <div className="col-span-2">
-          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-3">
-            Deliverables
-          </p>
+          <p className="font-medium text-[10px] tracking-widest uppercase text-white/40 mb-3">Deliverables</p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
             {(project.deliverables ?? []).map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-white/60"
-              >
+              <li key={item} className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-white/60">
                 <span className="w-1 h-1 rounded-full bg-white/35 flex-shrink-0" />
                 {item}
               </li>
@@ -375,9 +330,7 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
       <div ref={detailRef} className="space-y-7">
         {(project.problemStatement ?? project.problem) && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">
-              Problem
-            </h3>
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">Problem</h3>
             <p className="text-[13px] leading-relaxed text-white/65">
               {project.problemStatement ?? project.problem}
             </p>
@@ -385,19 +338,13 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
         )}
         {project.solution && (
           <div className="space-y-2">
-            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">
-              Solution
-            </h3>
-            <p className="text-[13px] leading-relaxed text-white/65">
-              {project.solution}
-            </p>
+            <h3 className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40">Solution</h3>
+            <p className="text-[13px] leading-relaxed text-white/65">{project.solution}</p>
           </div>
         )}
         {project.techStack?.length > 0 && (
           <div>
-            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40 mb-3">
-              Tech Stack
-            </p>
+            <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-white/40 mb-3">Tech Stack</p>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
@@ -417,6 +364,7 @@ function AboutContent({ project, headerRef, metaRef, detailRef }) {
 
 function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
   const mediaRef = useRef(null);
+
   useEffect(() => {
     if (!isVisible || !mediaRef.current) return;
     gsap.fromTo(
@@ -446,7 +394,6 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
           <MediaImage src={src} index={i} />
         </div>
       ))}
-
       {videoSrc && (
         <>
           <div className="media-item w-full flex items-center gap-3 px-1 mt-3">
@@ -467,6 +414,7 @@ function MediaContent({ allImages, videoSrc, hasMedia, isVisible }) {
 
 function ViewWork() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
   const loading = useSelector(selectProjectLoading);
@@ -485,26 +433,11 @@ function ViewWork() {
     if (loading) return;
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     if (headerRef.current)
-      tl.fromTo(
-        headerRef.current,
-        { y: -50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.75 },
-        0.05
-      );
+      tl.fromTo(headerRef.current, { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.75 }, 0.05);
     if (metaRef.current)
-      tl.fromTo(
-        metaRef.current,
-        { y: -35, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7 },
-        0.2
-      );
+      tl.fromTo(metaRef.current, { y: -35, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 0.2);
     if (detailRef.current)
-      tl.fromTo(
-        detailRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.65 },
-        0.35
-      );
+      tl.fromTo(detailRef.current, { y: -25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65 }, 0.35);
   }, [loading]);
 
   useEffect(() => {
@@ -536,6 +469,7 @@ function ViewWork() {
     <>
       <div className="min-h-screen bg-black text-white font-JetBrainsMono">
         <MobileTabBar activeTab={activeTab} onChange={setActiveTab} />
+
         <div className="flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20">
           <aside
             className={`
@@ -549,6 +483,18 @@ function ViewWork() {
               ${activeTab === "media" ? "hidden lg:block" : "block"}
             `}
           >
+            {/* Back button — top left, consistent with AllProject */}
+            <button
+              onClick={() => navigate(-1)}
+              className="group inline-flex items-center gap-2 text-[11px] uppercase tracking-widest
+                text-white/40 hover:text-white transition-colors duration-300 mb-8"
+            >
+              <span className="inline-block transition-transform duration-300 group-hover:-translate-x-0.5">
+                ←
+              </span>
+              <span>Back</span>
+            </button>
+
             <div ref={aboutPanelRef}>
               <AboutContent
                 project={project}
@@ -558,6 +504,7 @@ function ViewWork() {
               />
             </div>
           </aside>
+
           <main
             className={`
               w-full lg:flex-1

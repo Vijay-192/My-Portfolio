@@ -14,10 +14,12 @@ const Education = () => {
   );
   const [openIndex, setOpenIndex] = useState(null);
   const [currentImg, setCurrentImg] = useState(0);
+
   useEffect(() => {
     dispatch(fetchEducation());
     dispatch(fetchAchievements());
   }, [dispatch]);
+
   const sliderImages = education.flatMap((e) => e.images || []).filter(Boolean);
 
   useEffect(() => {
@@ -39,28 +41,22 @@ const Education = () => {
   return (
     <div className="bg-black min-h-auto p-4 sm:p-6 md:p-10 flex justify-center items-start font-JetBrainsMono">
       <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[79%] space-y-6">
-        <h1
-          className="
-            text-white/50 tracking-tight
-            text-4xl sm:text-5xl md:text-6xl
-            px-20 sm:px-8 md:px-26 lg:px-40 xl:px-67
-            -translate-x-[18%] sm:-translate-x-[22%]
-            relative mb-10
-          "
-        >
+
+        <h1 className="text-white/50 tracking-tight text-4xl sm:text-5xl md:text-6xl mb-10">
           education
         </h1>
+
         {sections.map((section, index) => (
           <div key={index} className="mb-2">
-            
+
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="group relative flex items-center justify-between w-full text-lg sm:text-xl md:text-2xl font-semibold px-4 py-3"
+              className="group relative flex items-center justify-between w-full text-left text-lg sm:text-xl md:text-2xl font-semibold px-0 py-3 cursor-pointer"
             >
-              <span className="text-white">{section.title}</span>
+              <span className="text-white pr-4 leading-snug">{section.title}</span>
               <ArrowUpRight
                 size={22}
-                className={`text-white duration-500  ${
+                className={`text-white duration-500 flex-shrink-0 transition-transform ${
                   openIndex === index ? "rotate-45" : ""
                 }`}
               />
@@ -75,32 +71,30 @@ const Education = () => {
               {section.type === "education" && (
                 <>
                   {eduLoading && (
-                    <p className="text-white/40 text-sm px-4">Loading...</p>
+                    <p className="text-white/40 text-sm px-0">Loading...</p>
                   )}
 
                   {!eduLoading &&
                     education.map((item) => (
                       <div
                         key={item._id}
-                        className="p-4 sm:p-6 md:p-6 bg-black border border-white/10 rounded-lg flex flex-col md:flex-row gap-4 md:gap-8 mb-4"
+                        className="p-4 sm:p-6 bg-black border border-white/10 rounded-lg flex flex-col md:flex-row gap-4 md:gap-8 mb-4"
                       >
                         <div className="w-full md:w-[35%]">
                           {sliderImages.length > 0 && (
                             <img
-                              src={
-                                sliderImages[currentImg % sliderImages.length]
-                              }
+                              src={sliderImages[currentImg % sliderImages.length]}
                               alt="Institute"
                               className="w-full h-48 sm:h-52 md:h-52 rounded-xl object-cover shadow-lg"
                             />
                           )}
                         </div>
                         <div className="flex-1 text-white space-y-1 sm:space-y-2">
-                          {/* Course name as heading */}
                           <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
                             {item.courseName}
                             {item.branch && ` — ${item.branch}`}
                           </h3>
+
                           {item.educationType === "college" && (
                             <>
                               <p className="opacity-80 text-sm sm:text-base text-white">
@@ -114,7 +108,6 @@ const Education = () => {
                             </>
                           )}
 
-                          {/* School fields */}
                           {item.educationType === "school" && (
                             <>
                               <p className="opacity-80 text-sm sm:text-base text-white">
@@ -133,7 +126,6 @@ const Education = () => {
                             </>
                           )}
 
-                          {/* Common fields */}
                           <p className="opacity-80 text-sm sm:text-base text-white">
                             📅 {item.session}
                           </p>
@@ -154,10 +146,11 @@ const Education = () => {
                     ))}
                 </>
               )}
+
               {section.type === "achievements" && (
                 <div className="space-y-4 sm:space-y-6">
                   {achLoading && (
-                    <p className="text-white/40 text-sm px-4">Loading...</p>
+                    <p className="text-white/40 text-sm px-0">Loading...</p>
                   )}
 
                   {!achLoading &&
@@ -176,7 +169,7 @@ const Education = () => {
                           )}
                         </div>
                         <div className="flex-1 text-white space-y-1 sm:space-y-2">
-                          <h4 className="text-md sm:text-lg md:text-lg font-semibold text-white">
+                          <h4 className="text-md sm:text-lg font-semibold text-white">
                             {ach.title}
                           </h4>
 
@@ -190,6 +183,7 @@ const Education = () => {
                               {ach.description}
                             </p>
                           )}
+
                           {ach.tags?.length > 0 && (
                             <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 sm:mt-3">
                               {ach.tags.map((tag, t) => (

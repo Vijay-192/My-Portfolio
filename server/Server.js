@@ -13,6 +13,7 @@ import bookingRoutes from "./Routes/Booking.route.js"
 import resumeRoutes from "./Routes/Resume.route.js";
 import { cvRouter } from "./Routes/Resume.route.js";
 import galleryRoutes from "./Routes/Gallery.route.js";
+import contact from "./Routes/Contact.route.js"
 const app = express();
 const PORT = process.env.PORT || 5000;
 //  Middlewares
@@ -37,6 +38,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/cv", cvRouter); 
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/contact", contact);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });

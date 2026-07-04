@@ -48,6 +48,7 @@ import BookCallNotify from "./Components/Dashboard/Pages/BookCallNotify.jsx";
 import Terms from "./Components/other/Terms.jsx";
 import PrivacyPolicy from "./Components/other/PrivacyPolicy.jsx";
 import Contact from "./Components/Contact/Contact.jsx";
+import AllProject from "./Components/Project/AllProject.jsx";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomeSection /> },
       { path: "work", element: <ProjectSection /> },
+      { path: "all-work", element: <AllProject /> },
       { path: "view-work/:id", element: <ViewWork /> },
       { path: "services", element: <SkillsSection /> }, //chage element
       { path: "about", element: <AboutSection /> },

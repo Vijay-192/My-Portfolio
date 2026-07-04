@@ -11,7 +11,9 @@ import achievementReducer from "../AchievementSlice";
 import bookingReducer from "../Bookingslice";
 import resumeReducer from "../ResumeSlice";
 import galleryReducer from "../GallerySlice";
+import contactReducer from "../ContactSlice";
 import dashboardReducer from "../Dashboardslice";
+
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -26,6 +28,7 @@ export const store = configureStore({
     booking: bookingReducer,
     resume: resumeReducer,
     gallery: galleryReducer,
+    contact: contactReducer,
     dashboard: dashboardReducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -9,6 +9,7 @@ import {
   selectBlogs,
   selectBlogLoading,
 } from "../../redux-store/BlogSlice";
+import CustomCursor from "../Project/CustomeCursor";
 
 const parseTags = (tags) => {
   const raw = Array.isArray(tags) ? tags.join(" ") : tags || "";
@@ -38,8 +39,9 @@ const AuthorBadge = ({ author, avatar }) => (
 
 export default function BlogSection() {
   const [active, setActive] = useState(null);
-  const [cursorText, setCursorText] = useState("");
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  const [cursorVisible, setCursorVisible] = useState(false);
+  const [cursorClicked, setCursorClicked] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,27 +60,19 @@ export default function BlogSection() {
       setActive(displayBlogs[0]._id);
     }
   }, [loading, displayBlogs.length]);
-
-  useEffect(() => {
-    const move = (e) => setMouse({ x: e.clientX - 40, y: e.clientY - 40 });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+  const handleMouseEnter = useCallback(() => setCursorVisible(true), []);
+  const handleMouseLeave = useCallback(() => {
+    setCursorVisible(false);
+    setCursorClicked(false);
   }, []);
+  const handleMouseDown = useCallback(() => setCursorClicked(true), []);
+  const handleMouseUp = useCallback(() => setCursorClicked(false), []);
 
   return (
     <>
-      {cursorText && (
-        <div
-          className="fixed z-[999] pointer-events-none"
-          style={{ left: mouse.x, top: mouse.y }}
-        >
-          <div className="w-20 h-20 rounded-full bg-black text-white flex items-center justify-center text-sm font-medium">
-            {cursorText}
-          </div>
-        </div>
-      )}
+      <CustomCursor visible={cursorVisible} clicked={cursorClicked} />
 
-      <section className="bg-black text-white min-h-screen font-JetBrainsMono px-4 sm:px-6 lg:px-56 py-16 sm:py-20 lg:py-24 cursor-none overflow-hidden">
+      <section className="bg-black text-white min-h-screen font-JetBrainsMono px-4 sm:px-6 lg:px-56 py-16 sm:py-20 lg:py-24 overflow-hidden">
         <div className="relative flex flex-col items-center justify-center text-center h-[65vh] sm:h-[60vh] px-4 overflow-hidden">
           <h1 className="font-JetBrainsMono font-extrabold tracking-tight text-[20vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none">
             Blogs
@@ -104,14 +98,12 @@ export default function BlogSection() {
                   >
                     <Skeleton height="100%" width="100%" borderRadius={4} />
 
-                    {/* tag pills */}
                     <div className="absolute top-4 left-4 flex gap-2 z-10">
                       <Skeleton width={40} height={20} borderRadius={9999} />
                       <Skeleton width={56} height={20} borderRadius={9999} />
                       <Skeleton width={48} height={20} borderRadius={9999} />
                     </div>
 
-                    {/* author badge */}
                     <div className="absolute bottom-6 left-4 flex items-center gap-2 z-10">
                       <Skeleton circle width={28} height={28} />
                       <Skeleton width={80} height={12} borderRadius={9999} />
@@ -132,12 +124,14 @@ export default function BlogSection() {
                     layout
                     onMouseEnter={() => {
                       setActive(work._id);
-                      setCursorText("View");
+                      handleMouseEnter();
                     }}
                     onMouseLeave={() => {
                       setActive(displayBlogs[0]?._id ?? null);
-                      setCursorText("");
+                      handleMouseLeave();
                     }}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
                     onClick={() => navigate(`/view-blog/${work._id}`)}
                     animate={{
                       flex: isActive ? 4 : 2,
@@ -148,7 +142,8 @@ export default function BlogSection() {
                       stiffness: 200,
                       damping: 25,
                     }}
-                    className="relative rounded-sm overflow-hidden cursor-none min-w-[260px] sm:min-w-[320px] lg:min-w-0 h-[360px] sm:h-[420px] lg:h-auto flex-shrink-0 lg:flex-1"
+                    style={{ cursor: cursorVisible ? "none" : "auto" }}
+                    className="relative rounded-sm overflow-hidden min-w-[260px] sm:min-w-[320px] lg:min-w-0 h-[360px] sm:h-[420px] lg:h-auto flex-shrink-0 lg:flex-1"
                   >
                     <motion.img
                       src={work.coverImage}
@@ -198,12 +193,14 @@ export default function BlogSection() {
                 layout
                 onMouseEnter={() => {
                   setActive(999);
-                  setCursorText("All Blogs");
+                  handleMouseEnter();
                 }}
                 onMouseLeave={() => {
                   setActive(displayBlogs[0]?._id ?? null);
-                  setCursorText("");
+                  handleMouseLeave();
                 }}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
                 onClick={() => navigate("/view-blog/all")}
                 animate={{
                   flex: active === 999 ? 4 : 2,
@@ -211,7 +208,8 @@ export default function BlogSection() {
                   backgroundColor: active === 999 ? "#FF2A00" : "#ffffff20",
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                className="relative rounded-sm flex items-center justify-center text-white font-semibold cursor-none text-xl sm:text-2xl lg:text-3xl min-w-[260px] sm:min-w-[320px] lg:min-w-0 h-[360px] sm:h-[420px] lg:h-auto flex-shrink-0 lg:flex-1"
+                style={{ cursor: cursorVisible ? "none" : "auto" }}
+                className="relative rounded-sm flex items-center justify-center text-white font-semibold text-xl sm:text-2xl lg:text-3xl min-w-[260px] sm:min-w-[320px] lg:min-w-0 h-[360px] sm:h-[420px] lg:h-auto flex-shrink-0 lg:flex-1"
               >
                 All Blogs
               </motion.div>

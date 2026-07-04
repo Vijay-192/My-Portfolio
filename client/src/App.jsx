@@ -65,6 +65,7 @@ function App() {
     location.pathname.startsWith("/view-work/") ||
     location.pathname.startsWith("/view-blog/") ||
     location.pathname.startsWith("/view-blog/all/") ||
+    location.pathname.startsWith("/all-work") ||
     location.pathname.startsWith("/contact") ||
     location.pathname.startsWith("/gallery");
 

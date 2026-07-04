@@ -91,9 +91,7 @@ const SkillSection = () => {
         <SkeletonTheme baseColor="#161616" highlightColor="#262626">
           {/* Title skeleton */}
           <div className="relative z-10 mb-14 w-full">
-            <div className="w-32">
-            
-            </div>
+            <div className="w-32"></div>
           </div>
 
           {/* Side fades */}
@@ -132,10 +130,10 @@ const SkillSection = () => {
       className="relative w-full min-h-screen bg-black overflow-hidden py-10 font-JetBrainsMono"
     >
       {/* Title */}
-      <div className="relative z-10 mb-14 w-full">
+      <div className="relative z-10 mb-14 w-full px-4 sm:px-0">
         <h2
           className="text-white/50 tracking-tight
-            text-4xl sm:text-5xl md:text-6xl ml-50"
+            text-4xl sm:text-5xl md:text-6xl ml-4 sm:ml-8 md:ml-16 lg:ml-32 xl:ml-50"
         >
           skills
         </h2>
